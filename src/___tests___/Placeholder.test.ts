@@ -10,22 +10,23 @@ test('Placeholder and escaping validity test', () => {
             protectCornersPatterns: [],
             protectedPatterns: [/abc/g],
             placeholderType : type,
-            mergeSequentialPlaceholders : false,
+            mergeSequentialPlaceholders : true,
             protectedPatternsPad : false,
             processingOrder : [TextProcessorOrderType.ESCAPE_SYMBOLS]
         });
 
         let originalSentences = [
             '!  abc  !',
-            '!abcabc!',
-            'abc'
+            '!abc|abc!',
+            'abc',
+            'abcabcabc'
         ];
 
         let process = processor.process(...originalSentences);
 
         let toTranslate = process.getTranslatableLines();
 
-        // Third sentence will be entirely placeholdered and skipped.
+        // Third and fourth sentences will be entirely placeholdered and skipped, so we should only get two
         expect(toTranslate.length).toBe(2);
 
         let placeholderRegExp = new RegExp(`${PlaceholderTypeRegExp[type]}`, "g");
