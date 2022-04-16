@@ -13,7 +13,6 @@ export enum TextProcessorOrderType {
 export enum PlaceholderType {
 	poleposition = 'poleposition',
 	hexPlaceholder = 'hexPlaceholder',
-	noEscape = 'noEscape',
 	ninesOfRandomness = 'ninesOfRandomness',
 	tagPlaceholder = 'tagPlaceholder',
 	tagPlaceholderLetter = 'tagPlaceholderLetter',
@@ -39,7 +38,6 @@ export enum PlaceholderType {
 export enum PlaceholderTypeNames {
 	poleposition = 'Poleposition (e.g. #24)',
 	hexPlaceholder = 'Hex Placeholder (e.g. 0xffffff)',
-	noEscape = 'No escaping (will translate everything)',
 	ninesOfRandomness = 'Closed Nines (e.g. 9123412349)',
 	tagPlaceholder = 'Tag Placeholder (e.g. &lt;24&gt;)',
 	tagPlaceholderLetter = 'Tag Placeholder with Letters (e.g. &lt;A&gt;',
@@ -90,7 +88,6 @@ export let PlaceholderTypeRegExp: { [id: string]: string } = {
 export let PlaceholderTypeArray = [
 	PlaceholderType.poleposition,
 	PlaceholderType.hexPlaceholder,
-	PlaceholderType.noEscape,
 	PlaceholderType.ninesOfRandomness,
 	PlaceholderType.tagPlaceholder,
 	PlaceholderType.tagPlaceholderLetter,
@@ -114,77 +111,74 @@ export let PlaceholderTypeArray = [
 ];
 
 export let PlaceholderCreator = {
-	poleposition: (count: number, text: string) => {
+	poleposition: (count: number) => {
 		return `#${count + 1}${count * 2}`;
 	},
-	hexPlaceholder: (count: number, text: string) => {
+	hexPlaceholder: (count: number) => {
 		return `0x${(privateAreaNumber + count).toString(16)}`;
 	},
-	noEscape: (count: number, text: string) => {
-		return text;
-	},
-	ninesOfRandomness: (count: number, text: string) => {
+	ninesOfRandomness: (count: number) => {
 		return `9${Array.from({ length: ninesLength }, () =>
 			Math.floor(Math.random() * 10).toString()
 		).join('')}9`;
 	},
-	tagPlaceholderLetter: (count: number, text: string) => {
+	tagPlaceholderLetter: (count: number) => {
 		return `<${String.fromCharCode(count + letterNumber)}>`;
 	},
-	tagPlaceholder: (count: number, text: string) => {
+	tagPlaceholder: (count: number) => {
 		return `<${count + 1}>`;
 	},
-	closedTagPlaceholder: (count: number, text: string) => {
+	closedTagPlaceholder: (count: number) => {
 		return `<${count + 1}/>`;
 	},
-	fullTagPlaceholder: (count: number, text: string) => {
+	fullTagPlaceholder: (count: number) => {
 		return `<${count + 1}></${count + 1}>`;
 	},
-	curlie: (count: number, text: string) => {
+	curlie: (count: number) => {
 		return `{${count + 1}}`;
 	},
-	doubleCurlie: (count: number, text: string) => {
+	doubleCurlie: (count: number) => {
 		return `{{${count + 1}}}`;
 	},
-	curlieLetter: (count: number, text: string) => {
+	curlieLetter: (count: number) => {
 		return `{${String.fromCharCode(count + letterNumber)}}`;
 	},
-	doubleCurlieLetter: (count: number, text: string) => {
+	doubleCurlieLetter: (count: number) => {
 		return `{{${String.fromCharCode(count + letterNumber)}}}`;
 	},
-	privateUse: (count: number, text: string) => {
+	privateUse: (count: number) => {
 		return `${String.fromCodePoint(count + privateAreaNumber)}`;
 	},
-	hashtag: (count: number, text: string) => {
+	hashtag: (count: number) => {
 		return `#${String.fromCharCode(count + letterNumber)}`;
 	},
-	hashtagTriple: (count: number, text: string) => {
+	hashtagTriple: (count: number) => {
 		return `#${String.fromCharCode(count + letterNumber)}${String.fromCharCode(
 			count + 1 + letterNumber
 		)}${String.fromCharCode(count + 2 + letterNumber)}`;
 	},
-	tournament: (count: number, text: string) => {
+	tournament: (count: number) => {
 		return `#${count + 1}`;
 	},
-	mvStyle: (count: number, text: string) => {
+	mvStyle: (count: number) => {
 		return `%${count + 1}`;
 	},
-	wolfStyle: (count: number, text: string) => {
+	wolfStyle: (count: number) => {
 		return `@${count + 1}`;
 	},
-	wolfStyleLetter: (count: number, text: string) => {
+	wolfStyleLetter: (count: number) => {
 		return `@${String.fromCharCode(count + letterNumber)}`;
 	},
-	percentage: (count: number, text: string) => {
+	percentage: (count: number) => {
 		return `${count + 1}%`;
 	},
-	mvStyleLetter: (count: number, text: string) => {
+	mvStyleLetter: (count: number) => {
 		return `%${String.fromCharCode(count + letterNumber)}`;
 	},
-	sugoiTranslatorSpecial: (count: number, text: string) => {
+	sugoiTranslatorSpecial: (count: number) => {
 		return `@#${count + 1}`;
 	},
-	sugoiTranslatorSpecial2: (count: number, text: string) => {
+	sugoiTranslatorSpecial2: (count: number) => {
 		return `@#${String.fromCharCode(count + letterNumber)}`;
 	}
 };

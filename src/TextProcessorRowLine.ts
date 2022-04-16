@@ -30,7 +30,7 @@ export class TextProcessorRowLine {
 	private expecting: number = 0;
 	private isScript: boolean = false;
 	private quoteType: string = '"';
-    private processed : boolean = false;
+	private processed: boolean = false;
 
 	constructor(process: TextProcessorProcess, text: string) {
 		this.process = process;
@@ -256,7 +256,7 @@ export class TextProcessorRowLine {
 
 		// Everything is right in the world
 		let count = this.placeholderCount++;
-		let placeholder = creator(count, match);
+		let placeholder = creator(count);
 
 		if (this.isEscapePatternPad()) {
 			placeholder = ' ' + placeholder + ' ';
@@ -270,7 +270,7 @@ export class TextProcessorRowLine {
 	}
 
 	public getTranslatableStrings() {
-        this.init();
+		this.init();
 		let strings: Array<string> = [];
 
 		// My own strings
@@ -326,14 +326,14 @@ export class TextProcessorRowLine {
 		}
 	}
 
-    protected init () {
-        if (this.processed) {
-            return;
-        }
+	protected init() {
+		if (this.processed) {
+			return;
+		}
 
-        let text = this.originalString;
+		let text = this.originalString;
 
-        if (this.isTrim()) {
+		if (this.isTrim()) {
 			text = text.trim();
 		}
 
@@ -377,7 +377,7 @@ export class TextProcessorRowLine {
 		if (this.isMergeSequentialSymbols()) {
 			this.mergeSequentialSymbols();
 		}
-    }
+	}
 
 	public getTranslatedString(): string {
 		if (this.translations.length != this.expecting) {
