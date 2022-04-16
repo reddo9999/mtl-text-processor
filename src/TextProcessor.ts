@@ -3,7 +3,6 @@ import {
   closerRegExp,
   defaultIsolateRegexp,
   defaultPunctuation,
-  defaultSplitEndsRegExp,
   defaultSymbols,
   openerRegExp,
   PlaceholderType,
