@@ -55,7 +55,7 @@ export class TextProcessorRowLine {
 
 	protected isolateSymbols() {
 		let patterns = this.getIsolatePatterns();
-		this.replaceAll(patterns, (match) => {
+		this.replaceAll(true, patterns, (match) => {
 			let placeholder = this.createPlaceholder(match);
 			this.placeholderContent[placeholder] = new TextProcessorRowLine(
 				this.process,
@@ -119,7 +119,7 @@ export class TextProcessorRowLine {
 
 	protected escapeSymbols() {
 		let patterns = this.getEscapePatterns();
-		this.replaceAll(patterns, (match) => {
+		this.replaceAll(false, patterns, (match) => {
 			let placeholder = this.createPlaceholder(match);
 			return placeholder;
 		});
@@ -128,7 +128,7 @@ export class TextProcessorRowLine {
 	protected mergeSequentialSymbols() {
 		let pattern = PlaceholderTypeRegExp[this.getPlaceholderType()];
 		if (typeof pattern == 'undefined') {
-            // Do not report this to the Process - this is spam and should only happen with invalid placeholder type.
+			// Do not report this to the Process - this is spam and should only happen with invalid placeholder type.
 			console.warn(
 				'[TextProcessorRowLine] Merging of sequential symbols was requested, but there is no pattern available for ' +
 					this.getPlaceholderType
@@ -139,7 +139,7 @@ export class TextProcessorRowLine {
 				`(${padding + pattern + padding}){2,}`,
 				'g'
 			);
-			this.replaceAll([regexPattern], (match) => {
+			this.replaceAll(false, [regexPattern], (match) => {
 				let placeholder = this.createPlaceholder(match);
 				return placeholder;
 			});
@@ -211,6 +211,7 @@ export class TextProcessorRowLine {
 	}
 
 	public replaceAll(
+		translatable: boolean,
 		patterns: Array<RegExp>,
 		replacer: (match: string) => string
 	) {
@@ -220,22 +221,26 @@ export class TextProcessorRowLine {
 					continue;
 				}
 
-                let text = <string> this.parts[textIndex];
+				let text = <string>this.parts[textIndex];
 
-                let matches = [...(text).matchAll(patterns[patternIndex])];
-                for (let i = matches.length - 1; i >= 0; i--) {
-                    let match = matches[i];
-                    if (match.index == 0 && match[0].length == text.length) {
-                        this.parts[textIndex] = this.storeSymbol(text); // will only have one match, so no need to break
-                    } else {
-                        text = text.substring(0, match.index) + replacer(match[0]) + text.substring(match.index! + match[0].length);
-                    }
-                }
-
-                if (typeof this.parts[textIndex] == 'string') {
-					this.parts[textIndex] = text;
+				let matches = [...text.matchAll(patterns[patternIndex])];
+				for (let i = matches.length - 1; i >= 0; i--) {
+					let match = matches[i];
+					if (match.index == 0 && match[0].length == text.length) {
+						if (!translatable) {
+							this.parts[textIndex] = this.storeSymbol(text); // will only have one match, so no need to break
+						}
+					} else {
+						text =
+							text.substring(0, match.index) +
+							replacer(match[0]) +
+							text.substring(match.index! + match[0].length);
+					}
 				}
 
+				if (typeof this.parts[textIndex] == 'string') {
+					this.parts[textIndex] = text;
+				}
 
 				/* this.parts[textIndex] = (<string>this.parts[textIndex]).replaceAll(
 					patterns[patternIndex],
@@ -265,12 +270,13 @@ export class TextProcessorRowLine {
 
 		// Is the placeholdertype valid?
 		if (typeof creator == 'undefined') {
-            this.process.addWarning({
-                message : '[TextProcessorRowLine] Invalid PlaceholderType provided - ' +
-            this.getPlaceholderType() +
-            '. Not escaping.',
-                originalSentence : this.originalString,
-            })
+			this.process.addWarning({
+				message:
+					'[TextProcessorRowLine] Invalid PlaceholderType provided - ' +
+					this.getPlaceholderType() +
+					'. Not escaping.',
+				originalSentence: this.originalString
+			});
 			return match;
 		}
 
@@ -437,12 +443,12 @@ export class TextProcessorRowLine {
 			}
 
 			if (idx == -1) {
-                this.process.addWarning({
-                    message: `[TextProcessorRowLine] Unable to reinsert placeholder: ${placeholder}`,
-                    originalSentence : this.originalString,
-                    currentSentence : finalString,
-                    placeholders : this.placeholders,
-                });
+				this.process.addWarning({
+					message: `[TextProcessorRowLine] Unable to reinsert placeholder: ${placeholder}`,
+					originalSentence: this.originalString,
+					currentSentence: finalString,
+					placeholders: this.placeholders
+				});
 			} else {
 				finalString =
 					finalString.substring(0, idx) +
