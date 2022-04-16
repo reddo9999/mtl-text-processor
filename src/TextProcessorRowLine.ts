@@ -17,7 +17,7 @@ type MatchAllOptions = {
 export class TextProcessorRowLine {
 	private process: TextProcessorProcess;
 	private originalString: string;
-	private parts: Array<string | number>;
+	private parts: Array<string | number> = [];
 	private symbols: Array<string> = [];
 	private placeholders: Array<string> = [];
 	private placeholderIndexFromMatch: { [match: string]: number } = {};
@@ -30,55 +30,11 @@ export class TextProcessorRowLine {
 	private expecting: number = 0;
 	private isScript: boolean = false;
 	private quoteType: string = '"';
+    private processed : boolean = false;
 
 	constructor(process: TextProcessorProcess, text: string) {
 		this.process = process;
 		this.originalString = text;
-
-		if (this.isTrim()) {
-			text = text.trim();
-		}
-
-		if (this.isMaintainScripts()) {
-			let trim = text.trim();
-			// Ideally we would do something like a JSON.parse, but just because it is a literal string doesn't mean it is a valid JSON string.
-			// Depending on the source of the original text, it might have invalid stuff like \C or \V (RPG Maker).
-			if (
-				['"', "'"].indexOf(trim.charAt(0)) != -1 &&
-				trim.charAt(trim.length - 1) == trim.charAt(0)
-			) {
-				this.isScript = true;
-				this.quoteType = trim.charAt(0);
-				text = trim.substring(1, trim.length - 1);
-			}
-		}
-
-		this.parts = [text];
-
-		let order = this.getProcessingOrder();
-		order.forEach((action) => {
-			switch (action) {
-				case TextProcessorOrderType.BREAK_LINES:
-					this.breakLines();
-					break;
-				case TextProcessorOrderType.ESCAPE_SYMBOLS:
-					this.escapeSymbols();
-					break;
-				case TextProcessorOrderType.ISOLATE_SENTENCES:
-					this.isolateSymbols();
-					break;
-				case TextProcessorOrderType.AGRESSIVE_SPLITTING:
-					this.splitSentences();
-					break;
-				case TextProcessorOrderType.CUT_CORNERS:
-					this.protectCorners();
-					break;
-			}
-		});
-
-		if (this.isMergeSequentialSymbols()) {
-			this.mergeSequentialSymbols();
-		}
 	}
 
 	public getProcessingOrder(): Array<TextProcessorOrderType> {
@@ -314,6 +270,7 @@ export class TextProcessorRowLine {
 	}
 
 	public getTranslatableStrings() {
+        this.init();
 		let strings: Array<string> = [];
 
 		// My own strings
@@ -368,6 +325,59 @@ export class TextProcessorRowLine {
 			}
 		}
 	}
+
+    protected init () {
+        if (this.processed) {
+            return;
+        }
+
+        let text = this.originalString;
+
+        if (this.isTrim()) {
+			text = text.trim();
+		}
+
+		if (this.isMaintainScripts()) {
+			let trim = text.trim();
+			// Ideally we would do something like a JSON.parse, but just because it is a literal string doesn't mean it is a valid JSON string.
+			// Depending on the source of the original text, it might have invalid stuff like \C or \V (RPG Maker).
+			if (
+				['"', "'"].indexOf(trim.charAt(0)) != -1 &&
+				trim.charAt(trim.length - 1) == trim.charAt(0)
+			) {
+				this.isScript = true;
+				this.quoteType = trim.charAt(0);
+				text = trim.substring(1, trim.length - 1);
+			}
+		}
+
+		this.parts = [text];
+
+		let order = this.getProcessingOrder();
+		order.forEach((action) => {
+			switch (action) {
+				case TextProcessorOrderType.BREAK_LINES:
+					this.breakLines();
+					break;
+				case TextProcessorOrderType.ESCAPE_SYMBOLS:
+					this.escapeSymbols();
+					break;
+				case TextProcessorOrderType.ISOLATE_SENTENCES:
+					this.isolateSymbols();
+					break;
+				case TextProcessorOrderType.AGRESSIVE_SPLITTING:
+					this.splitSentences();
+					break;
+				case TextProcessorOrderType.CUT_CORNERS:
+					this.protectCorners();
+					break;
+			}
+		});
+
+		if (this.isMergeSequentialSymbols()) {
+			this.mergeSequentialSymbols();
+		}
+    }
 
 	public getTranslatedString(): string {
 		if (this.translations.length != this.expecting) {
