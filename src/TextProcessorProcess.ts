@@ -34,7 +34,7 @@ export class TextProcessorProcess {
 	 * Be careful around your translator.
 	 * @param lines Array of translated lines, must be in the same order as getTranslatableLines
 	 */
-	public setTranslatedLines(lines: Array<string>) {
+	public setTranslatedLines(...lines: Array<string>) {
 		let internalLine: TextProcessorRowLine;
 		internalLine = this.lines[this.internalIndex];
 		for (let i = 0; i < lines.length; i++) {
