@@ -220,16 +220,34 @@ export class TextProcessorRowLine {
 					continue;
 				}
 
-				this.parts[textIndex] = (<string>this.parts[textIndex]).replaceAll(
+                let text = <string> this.parts[textIndex];
+
+                let matches = [...(text).matchAll(patterns[patternIndex])];
+                for (let i = matches.length - 1; i >= 0; i--) {
+                    let match = matches[i];
+                    if (match.index == 0 && match[0].length == text.length) {
+                        this.parts[textIndex] = this.storeSymbol(text); // will only have one match, so no need to break
+                    } else {
+                        text = text.substring(0, match.index) + replacer(match[0]) + text.substring(match.index! + match[0].length);
+                    }
+                }
+
+                if (typeof this.parts[textIndex] == 'string') {
+					this.parts[textIndex] = text;
+				}
+
+
+				/* this.parts[textIndex] = (<string>this.parts[textIndex]).replaceAll(
 					patterns[patternIndex],
 					(match) => {
-						if (match == this.parts[textIndex]) {
-							return match;
+						if (match === this.parts[textIndex]) {
+							this.parts[textIndex] = this.storeSymbol(match);
+                            return "";
 						} else {
 							return replacer(match);
 						}
 					}
-				);
+				); */
 			}
 		}
 	}

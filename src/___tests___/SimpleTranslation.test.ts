@@ -21,7 +21,7 @@ test('Simple sentence translation', () => {
 		arr[index] = str.replace('pineapples', 'MEAT');
 	});
 
-	process.setTranslatedLines(translatableStrings);
+	process.setTranslatedLines(...translatableStrings);
 
 	let translatedLines = process.getTranslatedLines();
 

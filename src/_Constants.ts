@@ -62,7 +62,7 @@ export enum PlaceholderTypeNames {
 
 export let PlaceholderTypeRegExp: { [id: string]: string } = {
 	poleposition: '#\\d+',
-	hexPlaceholder: '0x[a-fA-F]{4}',
+	hexPlaceholder: '0x[Ff][\\da-fA-F]{3}',
 	ninesOfRandomness: '9[\\d]{7}9',
 	tagPlaceholder: '<\\d+?>',
 	tagPlaceholderLetter: '<[a-zA-Z]+>',
