@@ -1,6 +1,6 @@
 {
     "name": "mtl-text-processor",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Tools for pre-processing and post-processing of text being machine translated.",
     "main": "lib/TextProcessor.js",
     "devDependencies": {
