@@ -128,7 +128,7 @@ export class TextProcessor {
 			TextProcessorOrderType.ESCAPE_SYMBOLS,
 			TextProcessorOrderType.ISOLATE_SENTENCES,
 			TextProcessorOrderType.CUT_CORNERS,
-			TextProcessorOrderType.AGRESSIVE_SPLITTING
+			TextProcessorOrderType.AGGRESSIVE_SPLITTING
 		],
 		maintainScripts: true,
 		mergeSequentialPlaceholders: true,

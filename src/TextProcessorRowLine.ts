@@ -365,7 +365,7 @@ export class TextProcessorRowLine {
 				case TextProcessorOrderType.ISOLATE_SENTENCES:
 					this.isolateSymbols();
 					break;
-				case TextProcessorOrderType.AGRESSIVE_SPLITTING:
+				case TextProcessorOrderType.AGGRESSIVE_SPLITTING:
 					this.splitSentences();
 					break;
 				case TextProcessorOrderType.CUT_CORNERS:
