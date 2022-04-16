@@ -128,6 +128,7 @@ export class TextProcessorRowLine {
 	protected mergeSequentialSymbols() {
 		let pattern = PlaceholderTypeRegExp[this.getPlaceholderType()];
 		if (typeof pattern == 'undefined') {
+            // Do not report this to the Process - this is spam and should only happen with invalid placeholder type.
 			console.warn(
 				'[TextProcessorRowLine] Merging of sequential symbols was requested, but there is no pattern available for ' +
 					this.getPlaceholderType
@@ -246,11 +247,12 @@ export class TextProcessorRowLine {
 
 		// Is the placeholdertype valid?
 		if (typeof creator == 'undefined') {
-			console.warn(
-				'[TextProcessorRowLine] Invalid PlaceholderType provided - ' +
-					this.getPlaceholderType() +
-					'. Not escaping.'
-			);
+            this.process.addWarning({
+                message : '[TextProcessorRowLine] Invalid PlaceholderType provided - ' +
+            this.getPlaceholderType() +
+            '. Not escaping.',
+                originalSentence : this.originalString,
+            })
 			return match;
 		}
 
@@ -417,12 +419,12 @@ export class TextProcessorRowLine {
 			}
 
 			if (idx == -1) {
-				console.warn(
-					'[TextProcessorRowLine] Unable to reinsert placeholder: ' +
-						placeholder,
-					this.originalString,
-					finalString
-				);
+                this.process.addWarning({
+                    message: `[TextProcessorRowLine] Unable to reinsert placeholder: ${placeholder}`,
+                    originalSentence : this.originalString,
+                    currentSentence : finalString,
+                    placeholders : this.placeholders,
+                });
 			} else {
 				finalString =
 					finalString.substring(0, idx) +
