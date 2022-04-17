@@ -37,6 +37,11 @@ type TextProcessorOptions = {
 	 */
 	trim: boolean;
 
+    /**
+     * If true, each individual line will also be trimmed
+     */
+    trimLines : boolean;
+
 	/**
 	 * If set to true, the resulting text will attempt to mimic the original's left padding.
 	 */
@@ -134,6 +139,7 @@ export class TextProcessor {
 		mergeSequentialPlaceholders: true,
 		recoverPadding: true,
 		trim: true,
+        trimLines : true,
 		aggressiveSplittingPatterns: [], // disabled by default
 		agressiveSplittingNext: false, // by default goes to the previous
 		aggressiveSplittingTranslatable: false, // by default is not translated
@@ -145,10 +151,7 @@ export class TextProcessor {
 				}])([${symbolsSpaces}]*\r?\n)`,
 				'g'
 			), // Previous sentence ended definitely.
-			new RegExp(
-				`(\r?\n[${symbolsSpaces}]*)(?=[${openerRegExp + defaultSymbols}])`,
-				'g'
-			) // Next sentence appears like a brand new start!
+			new RegExp(`(\r?\n[${symbolsSpaces}]*)(?=[${openerRegExp + defaultSymbols}])`, 'g') // Next sentence appears like a brand new start!
 		],
 		lineBreakReplacement: '\n',
 		isolateSymbolsPatterns: [
@@ -246,6 +249,10 @@ export class TextProcessor {
 
 	public isTrim() {
 		return this.options.trim;
+	}
+
+	public isTrimLines() {
+		return this.options.trimLines;
 	}
 
 	/**

@@ -135,10 +135,7 @@ export class TextProcessorRowLine {
 			);
 		} else {
 			let padding = '[' + symbolsSpaces + ']*';
-			let regexPattern = new RegExp(
-				`(${padding + pattern + padding}){2,}`,
-				'g'
-			);
+			let regexPattern = new RegExp(`(${padding + pattern + padding}){2,}`, 'g');
 			this.replaceAll(false, [regexPattern], (match) => {
 				let placeholder = this.createPlaceholder(match);
 				return placeholder;
@@ -156,16 +153,8 @@ export class TextProcessorRowLine {
 		let found = true;
 		while (found) {
 			found = false;
-			for (
-				let patternIndex = 0;
-				patternIndex < patterns.length;
-				patternIndex++
-			) {
-				for (
-					let textIndex = this.parts.length - 1;
-					textIndex >= 0;
-					textIndex--
-				) {
+			for (let patternIndex = 0; patternIndex < patterns.length; patternIndex++) {
+				for (let textIndex = this.parts.length - 1; textIndex >= 0; textIndex--) {
 					if (typeof this.parts[textIndex] != 'string') {
 						continue;
 					}
@@ -174,19 +163,14 @@ export class TextProcessorRowLine {
 						text: <string>this.parts[textIndex],
 						resultingArray: <Array<string | number>>[],
 						matches: [
-							...(<string>this.parts[textIndex]).matchAll(
-								patterns[patternIndex]
-							)
+							...(<string>this.parts[textIndex]).matchAll(patterns[patternIndex])
 						],
 						startPosition: 0
 					};
 
 					matching.matches.forEach((match) => {
 						found = true;
-						let line = matching.text.substring(
-							matching.startPosition,
-							match.index
-						);
+						let line = matching.text.substring(matching.startPosition, match.index);
 						let lineBreak = match[0];
 						let length = lineBreak.length;
 						matching.startPosition = match.index! + length;
@@ -196,9 +180,7 @@ export class TextProcessorRowLine {
 
 					// Did we get everything?
 					if (matching.startPosition < matching.text.length) {
-						matching.resultingArray.push(
-							matching.text.substring(matching.startPosition)
-						);
+						matching.resultingArray.push(matching.text.substring(matching.startPosition));
 					}
 
 					this.parts[textIndex] = matching.resultingArray[0];
@@ -288,8 +270,7 @@ export class TextProcessorRowLine {
 			placeholder = ' ' + placeholder + ' ';
 		}
 
-		this.placeholderIndexFromMatch[match] =
-			this.placeholders.push(placeholder) - 1;
+		this.placeholderIndexFromMatch[match] = this.placeholders.push(placeholder) - 1;
 		this.placeholderContent[placeholder] = match;
 
 		return placeholder;
@@ -343,10 +324,7 @@ export class TextProcessorRowLine {
 			}
 			if (typeof currentPart == 'undefined') {
 				// start applying to extracteds
-				while (
-					typeof currentExtracted != 'undefined' &&
-					currentExtracted.isDone()
-				) {
+				while (typeof currentExtracted != 'undefined' && currentExtracted.isDone()) {
 					currentExtracted = this.extractedStrings[++extractedIndex];
 				}
 				currentExtracted.addTranslations(this.translations[i]);
@@ -404,6 +382,18 @@ export class TextProcessorRowLine {
 					break;
 			}
 		});
+
+        if (this.isTrimLines()) {
+            for (let i = 0; i < this.parts.length; i++) {
+                if (typeof this.parts[i] == "string") {
+                    let lines = (<string> this.parts[i]).split("\n");
+                    for (let k = 0; k < lines.length; k++) {
+                        lines[k] = lines[k].trim();
+                    }
+                    this.parts[i] = lines.join("\n");
+                }
+            }
+        }
 
 		if (this.isMergeSequentialSymbols()) {
 			this.mergeSequentialSymbols();
@@ -548,6 +538,10 @@ export class TextProcessorRowLine {
 
 	public isTrim() {
 		return this.process.getProcessor().isTrim();
+	}
+
+	public isTrimLines() {
+		return this.process.getProcessor().isTrimLines();
 	}
 
 	public getLineBreakPatterns() {
