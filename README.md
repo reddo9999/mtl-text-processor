@@ -12,7 +12,7 @@
 Install:
 
 ```bash
-npm -i mtl-text-processor
+npm install mtl-text-processor
 ```
 
 Use it in your project:
@@ -39,6 +39,58 @@ translatableStrings.forEach(translatableLine => {
     myProcess.setTranslatedLines([translation]);
 });
 let translatedText = myProcess.getTranslatedLines();
+```
+
+## Complete Example using Axios and Sugoi Translator to translate a .txt file
+
+In this example we utilize Axios to control HTTP requests to a Sugoi Translator server started at port 14366. You'll need to install both axios and mtl-text-processor:
+
+```bash
+npm install mtl-text-processor && npm install axios
+```
+
+```js
+const axios = require('axios');
+const { TextProcessor } = require('mtl-text-processor');
+const fs = require('fs');
+let file = "MyTextFile";
+let text = fs.readFileSync(`./${file}.txt`, {encoding : "utf8"});
+let myProcessor = new TextProcessor();
+let myProcess = myProcessor.process(text);
+let toTranslate = myProcess.getTranslatableLines();
+
+let translations = [];
+
+let maxRequests = 10;
+let i = 0;
+function sendBatch () {
+    let batch = [];
+    while (i < toTranslate.length) {
+        batch.push(toTranslate[i++]);
+        if (batch.length >= maxRequests) {
+            break;
+        }
+    }
+
+    axios.post("http://0.0.0.0:14366/", {
+        message: "translate sentences",
+        content : batch
+    }).then(res => {
+        translations.push(...res.data);
+        if (i < toTranslate.length) {
+            sendBatch();
+        } else {
+            myProcess.setTranslatedLines(...translations);
+            fs.writeFileSync(
+                `./${file}_translated.txt`,
+                myProcess.getTranslatedLines().join("\n"),
+                {encoding : "utf8"}
+            );
+        }
+    });
+}
+
+sendBatch();
 ```
 
 # Why?
