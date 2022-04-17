@@ -492,6 +492,11 @@ export class TextProcessorRowLine {
 					}
 				}
 			}
+
+            for (let i = 0; i < explodedFinalString.length; i++) {
+                explodedFinalString[i] = getLastPad(i) + explodedFinalString[i];
+            }
+            finalString = explodedFinalString.join("\n");
 		}
 
 		return finalString;
