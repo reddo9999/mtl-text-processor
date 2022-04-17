@@ -171,13 +171,13 @@ export class TextProcessor {
 		TextProcessor.DEFAULT_OPTIONS
 	);
 
-    /**
-     * Options is entirely optional.
-     * WARNING: Default settings WILL be altered on a whim always.
-     * Only leave default values when you want whatever you just want basic functionality.
-     * Default settings will always try to reflect the ideal settings for most use-cases with no care for compatibility.
-     * @param options TextProcessorOptions
-     */
+	/**
+	 * Options is entirely optional.
+	 * WARNING: Default settings WILL be altered on a whim always.
+	 * Only leave default values when you want whatever you just want basic functionality.
+	 * Default settings will always try to reflect the ideal settings for most use-cases with no care for compatibility.
+	 * @param options TextProcessorOptions
+	 */
 	constructor(options?: Partial<TextProcessorOptions>) {
 		if (typeof options != 'undefined') {
 			this.setOptions(options);

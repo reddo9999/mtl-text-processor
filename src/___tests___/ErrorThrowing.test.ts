@@ -1,51 +1,51 @@
 import { TextProcessor } from '../TextProcessor';
 
 test('Error on too many strings', () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-    let f = () => {
-        let processor = new TextProcessor({
-            aggressiveSplittingPatterns: [],
-            isolateSymbolsPatterns: [],
-            protectCornersPatterns: [],
-            protectedPatterns: [],
-            lineBreakPatterns: [],
-            processingOrder: [],
-        });
-        
-        let process = processor.process("First", "Second");
-        let toTranslate = process.getTranslatableLines();
+	jest.spyOn(console, 'error').mockImplementation(() => {});
+	let f = () => {
+		let processor = new TextProcessor({
+			aggressiveSplittingPatterns: [],
+			isolateSymbolsPatterns: [],
+			protectCornersPatterns: [],
+			protectedPatterns: [],
+			lineBreakPatterns: [],
+			processingOrder: []
+		});
 
-        expect(toTranslate.length).toBe(2);
+		let process = processor.process('First', 'Second');
+		let toTranslate = process.getTranslatableLines();
 
-        toTranslate.push("Third wheel");
-        process.setTranslatedLines(...toTranslate);
-    }
+		expect(toTranslate.length).toBe(2);
+
+		toTranslate.push('Third wheel');
+		process.setTranslatedLines(...toTranslate);
+	};
 
 	expect(f).toThrowError();
 });
 
 test('Error on too few strings', () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-    let f = () => {
-        let processor = new TextProcessor({
-            aggressiveSplittingPatterns: [],
-            isolateSymbolsPatterns: [],
-            protectCornersPatterns: [],
-            protectedPatterns: [],
-            lineBreakPatterns: [],
-            processingOrder: [],
-        });
-        
-        let process = processor.process("First", "Second");
-        let toTranslate = process.getTranslatableLines();
+	jest.spyOn(console, 'error').mockImplementation(() => {});
+	let f = () => {
+		let processor = new TextProcessor({
+			aggressiveSplittingPatterns: [],
+			isolateSymbolsPatterns: [],
+			protectCornersPatterns: [],
+			protectedPatterns: [],
+			lineBreakPatterns: [],
+			processingOrder: []
+		});
 
-        expect(toTranslate.length).toBe(2);
+		let process = processor.process('First', 'Second');
+		let toTranslate = process.getTranslatableLines();
 
-        toTranslate.pop();
+		expect(toTranslate.length).toBe(2);
 
-        process.setTranslatedLines(...toTranslate);
-        process.getTranslatedLines();
-    }
+		toTranslate.pop();
+
+		process.setTranslatedLines(...toTranslate);
+		process.getTranslatedLines();
+	};
 
 	// We should get a single string back
 	expect(f).toThrowError();

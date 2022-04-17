@@ -336,19 +336,20 @@ export class TextProcessorRowLine {
 		let innerIndex = 0;
 		let currentPart = this.parts[innerIndex];
 		let extractedIndex = 0;
-        let currentExtracted = this.extractedStrings[extractedIndex];
+		let currentExtracted = this.extractedStrings[extractedIndex];
 		for (let i = 0; i < this.translations.length; i++) {
 			while (typeof currentPart == 'number') {
 				currentPart = this.parts[++innerIndex];
 			}
 			if (typeof currentPart == 'undefined') {
 				// start applying to extracteds
-                while (typeof currentExtracted != "undefined" && currentExtracted.isDone()) {
-                    currentExtracted = this.extractedStrings[++extractedIndex];
-                }
-				currentExtracted.addTranslations(
-					this.translations[i]
-				);
+				while (
+					typeof currentExtracted != 'undefined' &&
+					currentExtracted.isDone()
+				) {
+					currentExtracted = this.extractedStrings[++extractedIndex];
+				}
+				currentExtracted.addTranslations(this.translations[i]);
 			} else {
 				this.parts[innerIndex] = this.translations[i];
 				currentPart = this.parts[++innerIndex];

@@ -5,12 +5,12 @@ export class TextProcessorProcess {
 	private processor: TextProcessor;
 	private lines: Array<TextProcessorRowLine>;
 	private internalIndex = 0;
-    private warnings : Array<{
-        originalSentence : string;
-        currentSentence? : string;
-        placeholders? : Array<string>;
-        message : string;
-    }> = [];
+	private warnings: Array<{
+		originalSentence: string;
+		currentSentence?: string;
+		placeholders?: Array<string>;
+		message: string;
+	}> = [];
 
 	constructor(processor: TextProcessor, lines: Array<string>) {
 		this.processor = processor;
@@ -65,20 +65,25 @@ export class TextProcessorProcess {
 		return lines;
 	}
 
-    public addWarning (options : {message : string, originalSentence : string, currentSentence? : string, placeholders? : Array<string>}) {
-        this.warnings.push({
-            originalSentence : options.originalSentence,
-            currentSentence : options.currentSentence,
-            placeholders : options.placeholders,
-            message : options.message,
-        });
-    }
+	public addWarning(options: {
+		message: string;
+		originalSentence: string;
+		currentSentence?: string;
+		placeholders?: Array<string>;
+	}) {
+		this.warnings.push({
+			originalSentence: options.originalSentence,
+			currentSentence: options.currentSentence,
+			placeholders: options.placeholders,
+			message: options.message
+		});
+	}
 
-    public hasWarnings () {
-        return this.warnings.length > 0;
-    }
+	public hasWarnings() {
+		return this.warnings.length > 0;
+	}
 
-    public getWarnings () {
-        return [...this.warnings];
-    }
+	public getWarnings() {
+		return [...this.warnings];
+	}
 }

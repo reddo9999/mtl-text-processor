@@ -14,10 +14,10 @@ test('Isolated string test', () => {
 
 	let isolated = 'A Symbol for what is to come';
 
-	function fullString (isolated : string) {
-        return `This is the entire sentence, it likes to talk about (${isolated}), sometimes.`;;
-    }
-    
+	function fullString(isolated: string) {
+		return `This is the entire sentence, it likes to talk about (${isolated}), sometimes.`;
+	}
+
 	let process = processor.process(fullString(isolated));
 
 	let toTranslate = process.getTranslatableLines();
@@ -27,8 +27,8 @@ test('Isolated string test', () => {
 
 	expect(toTranslate[1]).toBe(`(${isolated})`);
 
-    let newIsolated = "A tarnished symbol of future lost";
-    toTranslate[1] = `(${newIsolated})`;
+	let newIsolated = 'A tarnished symbol of future lost';
+	toTranslate[1] = `(${newIsolated})`;
 
 	process.setTranslatedLines(...toTranslate);
 

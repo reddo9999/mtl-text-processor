@@ -37,18 +37,16 @@ test('Simple script translation', () => {
 		lineBreakPatterns: [],
 		protectCornersPatterns: [],
 		protectedPatterns: [],
-        maintainScripts : true,
+		maintainScripts: true
 	});
-	let originalSentences = [
-		'"pineapples"'
-	];
+	let originalSentences = ['"pineapples"'];
 
 	let process = processor.process(...originalSentences);
 
 	let translatableStrings = process.getTranslatableLines();
 
-    expect(translatableStrings.length).toBe(1);
-    expect(translatableStrings[0]).toBe("pineapples");
+	expect(translatableStrings.length).toBe(1);
+	expect(translatableStrings[0]).toBe('pineapples');
 
 	translatableStrings.forEach((str, index, arr) => {
 		arr[index] = str.replace('pineapples', 'MEAT');

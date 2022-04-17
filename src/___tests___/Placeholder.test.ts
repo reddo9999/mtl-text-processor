@@ -37,7 +37,6 @@ test('Placeholder and escaping validity test', () => {
 	});
 });
 
-
 test('Warning on fail to readd', () => {
 	Object.values(PlaceholderType).forEach((type) => {
 		let processor = new TextProcessor({
@@ -52,9 +51,9 @@ test('Warning on fail to readd', () => {
 			processingOrder: [TextProcessorOrderType.ESCAPE_SYMBOLS]
 		});
 
-        let start = "abc";
-        let middle = " Is my string complete? "
-        let end = "cba";
+		let start = 'abc';
+		let middle = ' Is my string complete? ';
+		let end = 'cba';
 		let originalSentences = [start + middle + end];
 
 		let process = processor.process(...originalSentences);
@@ -66,17 +65,19 @@ test('Warning on fail to readd', () => {
 		let placeholderRegExp = new RegExp(`${PlaceholderTypeRegExp[type]}`, 'g');
 		let matches = [...toTranslate[0].matchAll(placeholderRegExp)];
 		expect(matches.length).toBe(2);
-        
-        toTranslate[0] = toTranslate[0].substring(matches[0].index! + matches[0][0].length);
 
-        process.setTranslatedLines(...toTranslate);
+		toTranslate[0] = toTranslate[0].substring(
+			matches[0].index! + matches[0][0].length
+		);
 
-        let result = process.getTranslatedLines();
+		process.setTranslatedLines(...toTranslate);
 
-        expect(result.length).toBe(1);
-        expect(process.hasWarnings()).toBe(true);
-        expect(process.getWarnings().length).toBe(1);
+		let result = process.getTranslatedLines();
 
-        expect(result[0]).toBe(middle + end);
+		expect(result.length).toBe(1);
+		expect(process.hasWarnings()).toBe(true);
+		expect(process.getWarnings().length).toBe(1);
+
+		expect(result[0]).toBe(middle + end);
 	});
 });

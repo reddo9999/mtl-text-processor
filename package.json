@@ -1,42 +1,50 @@
 {
-    "name": "mtl-text-processor",
-    "version": "1.0.1",
-    "description": "Tools for pre-processing and post-processing of text being machine translated.",
-    "main": "lib/TextProcessor.js",
-    "devDependencies": {
-        "@types/jest": "^27.4.1",
-        "jest": "^27.5.1",
-        "prettier": "^2.6.2",
-        "ts-jest": "^27.1.4",
-        "tslint": "^6.1.3",
-        "tslint-config-prettier": "^1.18.0",
-        "typedoc": "^0.22.15",
-        "typedoc-plugin-missing-exports": "^0.22.6",
-        "typescript": "^4.6.3"
-    },
-    "scripts": {
-        "test": "jest --config jestconfig.json",
-        "build": "tsc && npx typedoc --out docs --entryPointStrategy expand ./src",
-        "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-        "lint": "tslint -p tsconfig.json",
-        "prepare": "npm run build",
-        "prepublishOnly": "npm test && npm run lint",
-        "preversion": "npm run lint",
-        "version": "npm run format && git add -A src",
-        "postversion": "git push && git push --tags"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/reddo9999/mtl-text-processor.git"
-    },
-    "keywords": [],
-    "author": "reddo9999",
-    "license": "GNU General Public License v3.0",
-    "bugs": {
-        "url": "https://github.com/reddo9999/mtl-text-processor/issues"
-    },
-    "homepage": "https://github.com/reddo9999/mtl-text-processor#readme",
-    "files": [
-        "lib/**/*"
-    ]
+  "name": "mtl-text-processor",
+  "version": "0.1.0",
+  "description": "A set of tools to pre-process for translation (by machine translators) and post-process the results back into the full sentence",
+  "homepage": "https://github.com/reddo9999/mtl-text-processor#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reddo9999/mtl-text-processor.git"
+  },
+  "engines": {
+    "node": ">=v16.0.0",
+    "npm": ">=v6.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/reddo9999/mtl-text-processor/issues"
+  },
+  "license": "GNU General Public License v3.0",
+  "author": {
+    "name": "reddo9999",
+    "url": "https://github.com/reddo9999"
+  },
+  "main": "lib/TextProcessor.js",
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "jest": "^27.5.1",
+    "md-generate": "^1.0.6",
+    "prettier": "^2.6.2",
+    "ts-jest": "^27.1.4",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typedoc": "^0.22.15",
+    "typedoc-plugin-missing-exports": "^0.22.6",
+    "typescript": "^4.6.3"
+  },
+  "scripts": {
+    "test": "jest --config jestconfig.json",
+    "build": "tsc && npx typedoc --out docs --entryPointStrategy expand ./src",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format",
+    "postversion": "git push && git push --tags"
+  },
+  "keywords": [],
+  "files": [
+    "lib/**/*"
+  ]
 }
