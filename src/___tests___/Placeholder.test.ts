@@ -66,9 +66,7 @@ test('Warning on fail to readd', () => {
 		let matches = [...toTranslate[0].matchAll(placeholderRegExp)];
 		expect(matches.length).toBe(2);
 
-		toTranslate[0] = toTranslate[0].substring(
-			matches[0].index! + matches[0][0].length
-		);
+		toTranslate[0] = toTranslate[0].substring(matches[0].index! + matches[0][0].length);
 
 		process.setTranslatedLines(...toTranslate);
 

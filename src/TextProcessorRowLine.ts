@@ -383,17 +383,17 @@ export class TextProcessorRowLine {
 			}
 		});
 
-        if (this.isTrimLines()) {
-            for (let i = 0; i < this.parts.length; i++) {
-                if (typeof this.parts[i] == "string") {
-                    let lines = (<string> this.parts[i]).split("\n");
-                    for (let k = 0; k < lines.length; k++) {
-                        lines[k] = lines[k].trim();
-                    }
-                    this.parts[i] = lines.join("\n");
-                }
-            }
-        }
+		if (this.isTrimLines()) {
+			for (let i = 0; i < this.parts.length; i++) {
+				if (typeof this.parts[i] == 'string') {
+					let lines = (<string>this.parts[i]).split('\n');
+					for (let k = 0; k < lines.length; k++) {
+						lines[k] = lines[k].trim();
+					}
+					this.parts[i] = lines.join('\n');
+				}
+			}
+		}
 
 		if (this.isMergeSequentialSymbols()) {
 			this.mergeSequentialSymbols();
@@ -483,10 +483,10 @@ export class TextProcessorRowLine {
 				}
 			}
 
-            for (let i = 0; i < explodedFinalString.length; i++) {
-                explodedFinalString[i] = getLastPad(i) + explodedFinalString[i];
-            }
-            finalString = explodedFinalString.join("\n");
+			for (let i = 0; i < explodedFinalString.length; i++) {
+				explodedFinalString[i] = getLastPad(i) + explodedFinalString[i];
+			}
+			finalString = explodedFinalString.join('\n');
 		}
 
 		return finalString;

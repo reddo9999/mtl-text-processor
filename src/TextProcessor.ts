@@ -37,10 +37,10 @@ type TextProcessorOptions = {
 	 */
 	trim: boolean;
 
-    /**
-     * If true, each individual line will also be trimmed
-     */
-    trimLines : boolean;
+	/**
+	 * If true, each individual line will also be trimmed
+	 */
+	trimLines: boolean;
 
 	/**
 	 * If set to true, the resulting text will attempt to mimic the original's left padding.
@@ -139,7 +139,7 @@ export class TextProcessor {
 		mergeSequentialPlaceholders: true,
 		recoverPadding: true,
 		trim: true,
-        trimLines : true,
+		trimLines: true,
 		aggressiveSplittingPatterns: [], // disabled by default
 		agressiveSplittingNext: false, // by default goes to the previous
 		aggressiveSplittingTranslatable: false, // by default is not translated

@@ -7,28 +7,31 @@ test('Trim whole sentence and trim lines', () => {
 		lineBreakPatterns: [],
 		protectCornersPatterns: [],
 		protectedPatterns: [],
-        trim : true,
-        trimLines : true,
-        recoverPadding : false,
+		trim: true,
+		trimLines: true,
+		recoverPadding: false
 	});
-	let originalSentences = ['     I love pineapples!       ', 'I love pineapples\n on my pizza!'];
+	let originalSentences = [
+		'     I love pineapples!       ',
+		'I love pineapples\n on my pizza!'
+	];
 
 	let process = processor.process(...originalSentences);
 
 	let translatableStrings = process.getTranslatableLines();
 
-    expect(translatableStrings).toMatchObject([
-        "I love pineapples!",
-        "I love pineapples\non my pizza!"
-    ]);
+	expect(translatableStrings).toMatchObject([
+		'I love pineapples!',
+		'I love pineapples\non my pizza!'
+	]);
 
-    process.setTranslatedLines(...translatableStrings);
+	process.setTranslatedLines(...translatableStrings);
 
-    // They are trimmed forever
-    expect(process.getTranslatedLines()).toMatchObject([
-        "I love pineapples!",
-        "I love pineapples\non my pizza!"
-    ])
+	// They are trimmed forever
+	expect(process.getTranslatedLines()).toMatchObject([
+		'I love pineapples!',
+		'I love pineapples\non my pizza!'
+	]);
 });
 
 test('Trims but recover pad', () => {
@@ -38,26 +41,29 @@ test('Trims but recover pad', () => {
 		lineBreakPatterns: [],
 		protectCornersPatterns: [],
 		protectedPatterns: [],
-        trim : true,
-        trimLines : true,
-        recoverPadding : true
+		trim: true,
+		trimLines: true,
+		recoverPadding: true
 	});
-	let originalSentences = ['     I love pineapples!       ', 'I love pineapples\n on my pizza!'];
+	let originalSentences = [
+		'     I love pineapples!       ',
+		'I love pineapples\n on my pizza!'
+	];
 
 	let process = processor.process(...originalSentences);
 
 	let translatableStrings = process.getTranslatableLines();
 
-    expect(translatableStrings).toMatchObject([
-        "I love pineapples!",
-        "I love pineapples\non my pizza!"
-    ]);
+	expect(translatableStrings).toMatchObject([
+		'I love pineapples!',
+		'I love pineapples\non my pizza!'
+	]);
 
-    process.setTranslatedLines(...translatableStrings);
+	process.setTranslatedLines(...translatableStrings);
 
-    // They are trimmed forever
-    expect(process.getTranslatedLines()).toMatchObject([
-        "     I love pineapples!",
-        "I love pineapples\n on my pizza!"
-    ])
+	// They are trimmed forever
+	expect(process.getTranslatedLines()).toMatchObject([
+		'     I love pineapples!',
+		'I love pineapples\n on my pizza!'
+	]);
 });

@@ -8,10 +8,7 @@ test('Simple sentence translation', () => {
 		protectCornersPatterns: [],
 		protectedPatterns: []
 	});
-	let originalSentences = [
-		'I love pineapples!',
-		'I love pineapples on my pizza!'
-	];
+	let originalSentences = ['I love pineapples!', 'I love pineapples on my pizza!'];
 
 	let process = processor.process(...originalSentences);
 
