@@ -1,3 +1,7 @@
+# 0.4.0
+- Sentences comprised entirely of placeholders no longer request translation.
+- TextProcessorRowLine no longer allows more than one call to init().
+
 # 0.3.0
 - Add noRepeat option
 
