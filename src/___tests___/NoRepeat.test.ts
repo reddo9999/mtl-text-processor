@@ -30,15 +30,11 @@ test('Simple sentence translation', () => {
 test('No repeat tests', () => {
 	let processor = new TextProcessor({
 		aggressiveSplittingPatterns: [],
-		isolateSymbolsPatterns: [
-            /\(.+?\)/g
-        ],
+		isolateSymbolsPatterns: [/\(.+?\)/g],
 		lineBreakPatterns: [],
-		protectCornersPatterns: [
-            /(^\()|(\)$)/g
-        ],
+		protectCornersPatterns: [/(^\()|(\)$)/g],
 		protectedPatterns: [],
-        noRepeat : true
+		noRepeat: true
 	});
 	let originalSentences = ['I have a (pen)', 'I have a (pineapple)', '(pineapple)(pen)'];
 
@@ -46,25 +42,27 @@ test('No repeat tests', () => {
 
 	let translatableStrings = process.getTranslatableLines();
 
-    // Normally we'd have at least 6:
-    /**
-     * I have a 
-     * I have a 
-     * pen
-     * pineapple
-     * pineapple
-     * pen
-     */
+	// Normally we'd have at least 6:
+	/**
+	 * I have a
+	 * I have a
+	 * pen
+	 * pineapple
+	 * pineapple
+	 * pen
+	 */
 	expect(translatableStrings.length).toBe(3);
 	expect(translatableStrings[1]).toBe('pen');
 	expect(translatableStrings[2]).toBe('pineapple');
 
-	process.setTranslatedLines(translatableStrings[0], "pencil", "apple");
+	process.setTranslatedLines(translatableStrings[0], 'pencil', 'apple');
 
 	let translatedLines = process.getTranslatedLines();
 
 	expect(translatedLines.length).toBe(3);
 	expect(translatedLines).toMatchObject([
-        'I have a (pencil)', 'I have a (apple)', '(apple)(pencil)'
-    ]);
+		'I have a (pencil)',
+		'I have a (apple)',
+		'(apple)(pencil)'
+	]);
 });

@@ -114,11 +114,11 @@ type TextProcessorOptions = {
 	 */
 	lineBreakReplacement: string;
 
-    /**
-     * Doesn't send repeated sentences.
-     * This works under the "process", so it will attempt to not send repeated lines for translations.
-     */
-    noRepeat : boolean;
+	/**
+	 * Doesn't send repeated sentences.
+	 * This works under the "process", so it will attempt to not send repeated lines for translations.
+	 */
+	noRepeat: boolean;
 };
 
 /**
@@ -173,7 +173,7 @@ export class TextProcessor {
 			// this is far too personal to set up a default.
 		],
 		protectedPatternsPad: false, // Assume translators are not eating them up
-        noRepeat : true,
+		noRepeat: true
 	};
 
 	private options: TextProcessorOptions = Object.assign(
@@ -262,9 +262,9 @@ export class TextProcessor {
 		return this.options.trimLines;
 	}
 
-    public isNoRepeat () {
-        return this.options.noRepeat;
-    }
+	public isNoRepeat() {
+		return this.options.noRepeat;
+	}
 
 	/**
 	 * This initiates a translation process.
