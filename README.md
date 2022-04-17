@@ -1,4 +1,4 @@
-# mtl-text-processor!
+# mtl-text-processor
 
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/reddo9999/mtl-text-processor) [![License](https://img.shields.io/github/license/reddo9999/mtl-text-processor)](https://choosealicense.com/licenses/gpl-3.0/)
 
