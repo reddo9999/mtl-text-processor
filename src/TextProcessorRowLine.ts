@@ -143,6 +143,28 @@ export class TextProcessorRowLine {
 		}
 	}
 
+    protected protectPureSymbols () {
+		let pattern = PlaceholderTypeRegExp[this.getPlaceholderType()];
+		if (typeof pattern == 'undefined') {
+			// Do not report this to the Process - this is spam and should only happen with invalid placeholder type.
+			console.warn(
+				'[TextProcessorRowLine] No pattern available for ' +
+					this.getPlaceholderType
+			);
+		} else {
+			let padding = '[' + symbolsSpaces + ']*';
+			let regexPattern = new RegExp(`^(${padding + pattern + padding})+$`, 'g');
+            for (let i = 0; i < this.parts.length; i++) {
+                if (typeof this.parts[i] == "string") {
+                    let match = (<string> this.parts[i]).match(regexPattern);
+                    if (match != null) {
+                        this.parts[i] = this.storeSymbol(<string> this.parts[i]);
+                    }
+                }
+            }
+		}
+    }
+
 	public matchAll(
 		patterns: Array<RegExp>,
 		onMatch: (
@@ -398,6 +420,10 @@ export class TextProcessorRowLine {
 		if (this.isMergeSequentialSymbols()) {
 			this.mergeSequentialSymbols();
 		}
+
+        this.protectPureSymbols();
+
+        this.processed = true;
 	}
 
 	public getTranslatedString(): string {
