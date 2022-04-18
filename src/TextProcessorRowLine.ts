@@ -1,3 +1,4 @@
+import type { TextProcessorPattern } from './TextProcessor';
 import type { TextProcessorProcess } from './TextProcessorProcess';
 import {
 	PlaceholderCreator,
@@ -31,10 +32,14 @@ export class TextProcessorRowLine {
 	private isScript: boolean = false;
 	private quoteType: string = '"';
 	private processed: boolean = false;
+    private passes : {[id : number] : number} = {};
 
 	constructor(process: TextProcessorProcess, text: string) {
 		this.process = process;
 		this.originalString = text;
+        for (let key in TextProcessorOrderType) {
+            this.passes[key] = 0;
+        }
 	}
 
 	public getProcessingOrder(): Array<TextProcessorOrderType> {
@@ -65,21 +70,21 @@ export class TextProcessorRowLine {
 				<TextProcessorRowLine>this.placeholderContent[placeholder]
 			);
 			return placeholder;
-		});
+		}, this.passes[TextProcessorOrderType.ISOLATE_SENTENCES]++);
 	}
 
 	protected protectCorners() {
 		let patterns = this.getProtectCornersPatterns();
 		this.matchAll(patterns, (matching, match) => {
 			return [this.storeSymbol(match[0])];
-		});
+		}, this.passes[TextProcessorOrderType.CUT_CORNERS]++);
 	}
 
 	protected breakLines() {
 		let patterns = this.getLineBreakPatterns();
 		this.matchAll(patterns, (matching, match) => {
 			return [this.storeSymbol(this.getLineBreakReplacement())];
-		});
+		}, this.passes[TextProcessorOrderType.BREAK_LINES]++);
 	}
 
 	protected splitSentences() {
@@ -90,7 +95,7 @@ export class TextProcessorRowLine {
 			let idx = this.storeSymbol(match[0]);
 			splitsOn.push(idx);
 			return [idx];
-		});
+		}, this.passes[TextProcessorOrderType.AGGRESSIVE_SPLITTING]++);
 
 		if (this.isSplittingTranslatable()) {
 			for (let i = this.parts.length - 1; i >= 0; i--) {
@@ -122,7 +127,7 @@ export class TextProcessorRowLine {
 		this.replaceAll(false, patterns, (match) => {
 			let placeholder = this.createPlaceholder(match);
 			return placeholder;
-		});
+		}, this.passes[TextProcessorOrderType.ESCAPE_SYMBOLS]++);
 	}
 
 	protected mergeSequentialSymbols() {
@@ -139,7 +144,7 @@ export class TextProcessorRowLine {
 			this.replaceAll(false, [regexPattern], (match) => {
 				let placeholder = this.createPlaceholder(match);
 				return placeholder;
-			});
+			}, 0);
 		}
 	}
 
@@ -164,12 +169,27 @@ export class TextProcessorRowLine {
 		}
 	}
 
+    public regExpFromPattern (unfilteredPattern : TextProcessorPattern, options : {pass : number, fullString : string}) : RegExp | void {
+        if (unfilteredPattern instanceof RegExp) {
+            return unfilteredPattern;
+        } else if (Array.isArray(unfilteredPattern)) {
+            let exps : Array<string> = [];
+            (<Array<string>> unfilteredPattern).forEach((str : string) => {
+                exps.push("(" + str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&') + ")");
+            });
+            return new RegExp(exps.join("\|"), "gi");
+        } else if (typeof unfilteredPattern == "function") {
+            return this.regExpFromPattern((<Function> unfilteredPattern)(options), options);
+        }
+    }
+
 	public matchAll(
-		patterns: Array<RegExp>,
+		patterns: Array<TextProcessorPattern>,
 		onMatch: (
 			matching: MatchAllOptions,
 			match: RegExpMatchArray
-		) => Array<string | number>
+		) => Array<string | number>,
+        pass: number
 	) {
 		let found = true;
 		while (found) {
@@ -180,11 +200,15 @@ export class TextProcessorRowLine {
 						continue;
 					}
 
+                    let pattern = this.regExpFromPattern(patterns[patternIndex], {fullString : <string>this.parts[textIndex], pass : pass});
+                    if (pattern == undefined) {
+                        continue;
+                    }
 					let matching = {
 						text: <string>this.parts[textIndex],
 						resultingArray: <Array<string | number>>[],
 						matches: [
-							...(<string>this.parts[textIndex]).matchAll(patterns[patternIndex])
+							...(<string>this.parts[textIndex]).matchAll(pattern)
 						],
 						startPosition: 0
 					};
@@ -215,8 +239,9 @@ export class TextProcessorRowLine {
 
 	public replaceAll(
 		translatable: boolean,
-		patterns: Array<RegExp>,
-		replacer: (match: string) => string
+		patterns: Array<TextProcessorPattern>,
+		replacer: (match: string) => string,
+        pass : number,
 	) {
 		for (let patternIndex = 0; patternIndex < patterns.length; patternIndex++) {
 			for (let textIndex = this.parts.length - 1; textIndex >= 0; textIndex--) {
@@ -225,8 +250,12 @@ export class TextProcessorRowLine {
 				}
 
 				let text = <string>this.parts[textIndex];
+                let pattern = this.regExpFromPattern(patterns[patternIndex], {fullString : text, pass : pass});
+                if (pattern == undefined) {
+                    continue;
+                }
 
-				let matches = [...text.matchAll(patterns[patternIndex])];
+				let matches = [...text.matchAll(pattern)];
 				for (let i = matches.length - 1; i >= 0; i--) {
 					let match = matches[i];
 					if (match.index == 0 && match[0].length == text.length) {
@@ -244,18 +273,6 @@ export class TextProcessorRowLine {
 				if (typeof this.parts[textIndex] == 'string') {
 					this.parts[textIndex] = text;
 				}
-
-				/* this.parts[textIndex] = (<string>this.parts[textIndex]).replaceAll(
-					patterns[patternIndex],
-					(match) => {
-						if (match === this.parts[textIndex]) {
-							this.parts[textIndex] = this.storeSymbol(match);
-                            return "";
-						} else {
-							return replacer(match);
-						}
-					}
-				); */
 			}
 		}
 	}
@@ -517,17 +534,17 @@ export class TextProcessorRowLine {
 		return finalString;
 	}
 
-	public getIsolatePatterns(): Array<RegExp> {
+	public getIsolatePatterns(): Array<TextProcessorPattern> {
 		return this.process.getProcessor().getIsolatePatterns();
 		//return [/(\()(.+?)(\))/g];
 	}
 
-	public getEscapePatterns(): Array<RegExp> {
+	public getEscapePatterns(): Array<TextProcessorPattern> {
 		return this.process.getProcessor().getEscapePatterns();
 		//return [/(\\C\[\d+\])+/g];
 	}
 
-	public getSplittingPatterns(): Array<RegExp> {
+	public getSplittingPatterns(): Array<TextProcessorPattern> {
 		return this.process.getProcessor().getAggressiveSplittingPatterns();
 		//return [/( *\r?\n *){2,}/g];
 	}

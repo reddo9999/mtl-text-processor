@@ -11,6 +11,27 @@ import {
 } from './_Constants';
 
 /**
+ * Valid types of patterns:
+ * Array of string for direct matching (will convert to global RegExps)
+ * RegExp (must be global)
+ * function that returns either void, string, or RegExp (must be global).
+ */
+export type TextProcessorPattern = Array<string> | RegExp | (
+    (options : {
+        /**
+         * The string as it was when processing of the pattern started.
+         */
+        fullString : string,
+
+        /**
+         * A zero-based count for how many times this kind of process was done.
+         * This can be used when doing one of the processing more than once, and only having certain patterns on the second go, etc.
+         */
+        pass : number,
+    }) => RegExp | Array<string> | void
+);
+
+/**
  * Options type for the Processor
  * While initiating the Processor, all options are optional.
  * Be aware that while the default values are pretty good for most use-cases, it's valuable to set values according to the project.
@@ -56,28 +77,9 @@ type TextProcessorOptions = {
 	maintainScripts: boolean;
 
 	/**
-	 * Every match will be removed from the string before translation and added back after translation. These patterns are, by nature, not translatable.
-	 * Use cases: remove script calls that can't be translated, or even remove Placeholders at corners to make sure they will maintain their positions after translation.
-	 * This assumes that the match will either be at the start of the string or at the end of it.
-	 */
-	protectCornersPatterns: Array<RegExp>;
-
-	/**
 	 * If we have multiple symbols in a row, we can merge them into a single symbol to avoid confusing the translator.
 	 */
 	mergeSequentialPlaceholders: boolean;
-
-	/**
-	 * Isolates a string for translation.
-	 * Whatever matches the RegExp will be replaced by a placeholder on the original string, but will be translated separatedly as a new string.
-	 */
-	isolateSymbolsPatterns: Array<RegExp>;
-
-	/**
-	 * On match, splits sentences for translation.
-	 * By default, the matched symbols will not be translatable nor sent to the translator.
-	 */
-	aggressiveSplittingPatterns: Array<RegExp>;
 
 	/**
 	 * If the boundary symbol needs to be translated, this can be set to true.
@@ -91,23 +93,10 @@ type TextProcessorOptions = {
 	agressiveSplittingNext: boolean;
 
 	/**
-	 * A list of patterns that will be matched, extracted, and replaced with placeholders during the translation process.
-	 * e.g. /\\C\[\d+\]/gi to match RPG Maker color codes.
-	 */
-	protectedPatterns: Array<RegExp>;
-
-	/**
 	 * If set to true, when adding placeholders they will be padded with spaces.
 	 * So if a placeholder would normally be "%A", this will add a " %A " - useful if translating from a language which might conflict with the placeholders.
 	 */
 	protectedPatternsPad: boolean;
-
-	/**
-	 * This breaks the line into multiple lines.
-	 * It works similarly to the splitter, except that the match is discarded and replaced with lineBreakReplacement.
-	 * Main use for this is when using translators that don't create new lines automatically, but translation quality and speed will improve even on the cases where they do.
-	 */
-	lineBreakPatterns: Array<RegExp>;
 
 	/**
 	 * This will be added to the final text whenever lineBreakPattern Happens.
@@ -119,6 +108,38 @@ type TextProcessorOptions = {
 	 * This works under the "process", so it will attempt to not send repeated lines for translations.
 	 */
 	noRepeat: boolean;
+
+	/**
+	 * Every match will be removed from the string before translation and added back after translation. These patterns are, by nature, not translatable.
+	 * Use cases: remove script calls that can't be translated, or even remove Placeholders at corners to make sure they will maintain their positions after translation.
+	 * This assumes that the match will either be at the start of the string or at the end of it.
+	 */
+	protectCornersPatterns: Array<TextProcessorPattern>;
+
+	/**
+	 * A list of patterns that will be matched, extracted, and replaced with placeholders during the translation process.
+	 * e.g. /\\C\[\d+\]/gi to match RPG Maker color codes.
+	 */
+	protectedPatterns: Array<TextProcessorPattern>;
+
+	/**
+	 * This breaks the line into multiple lines.
+	 * It works similarly to the splitter, except that the match is discarded and replaced with lineBreakReplacement.
+	 * Main use for this is when using translators that don't create new lines automatically, but translation quality and speed will improve even on the cases where they do.
+	 */
+	lineBreakPatterns: Array<TextProcessorPattern>;
+
+	/**
+	 * Isolates a string for translation.
+	 * Whatever matches the RegExp will be replaced by a placeholder on the original string, but will be translated separatedly as a new string.
+	 */
+	isolateSymbolsPatterns: Array<TextProcessorPattern>;
+
+	/**
+	 * On match, splits sentences for translation.
+	 * By default, the matched symbols will not be translatable nor sent to the translator.
+	 */
+	aggressiveSplittingPatterns: Array<TextProcessorPattern>;
 };
 
 /**
