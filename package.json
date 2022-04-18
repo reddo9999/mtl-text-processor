@@ -45,6 +45,6 @@
   },
   "keywords": [],
   "files": [
-    "lib/**/*"
+    "lib/**/*", "!lib/**/*.test.js"
   ]
 }
