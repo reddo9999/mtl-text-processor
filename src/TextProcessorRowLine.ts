@@ -1,4 +1,4 @@
-import type { TextProcessorPattern } from './TextProcessor';
+import type { TextProcessorPattern, TextProcessorPatternFunction } from './TextProcessor';
 import type { TextProcessorProcess } from './TextProcessorProcess';
 import {
 	PlaceholderCreator,
@@ -179,7 +179,7 @@ export class TextProcessorRowLine {
             });
             return new RegExp(exps.join("\|"), "gi");
         } else if (typeof unfilteredPattern == "function") {
-            return this.regExpFromPattern((<Function> unfilteredPattern)(options), options);
+            return this.regExpFromPattern((<TextProcessorPatternFunction> unfilteredPattern)(options), options);
         }
     }
 

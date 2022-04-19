@@ -10,26 +10,26 @@ import {
 	TextProcessorOrderType
 } from './_Constants';
 
+export type TextProcessorPatternFunction = (options : {
+    /**
+     * The string as it was when processing of the pattern started.
+     */
+    fullString : string,
+
+    /**
+     * A zero-based count for how many times this kind of process was done.
+     * This can be used when doing one of the processing more than once, and only having certain patterns on the second go, etc.
+     */
+    pass : number,
+}) => RegExp | Array<string> | void;
+
 /**
  * Valid types of patterns:
  * Array of string for direct matching (will convert to global RegExps)
  * RegExp (must be global)
  * function that returns either void, string, or RegExp (must be global).
  */
-export type TextProcessorPattern = Array<string> | RegExp | (
-    (options : {
-        /**
-         * The string as it was when processing of the pattern started.
-         */
-        fullString : string,
-
-        /**
-         * A zero-based count for how many times this kind of process was done.
-         * This can be used when doing one of the processing more than once, and only having certain patterns on the second go, etc.
-         */
-        pass : number,
-    }) => RegExp | Array<string> | void
-);
+export type TextProcessorPattern = Array<string> | RegExp | TextProcessorPatternFunction | void;
 
 /**
  * Options type for the Processor
