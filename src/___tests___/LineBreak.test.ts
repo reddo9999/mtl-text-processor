@@ -35,5 +35,5 @@ test('Line Break tests', () => {
 	expect(translatedStrings.length).toBe(1);
 
 	// Multiple line breaks should have been merged into a single line break
-	expect(translatedStrings[0].split('\n').length).toBe(4);
+	expect(translatedStrings[0]!.split('\n').length).toBe(4);
 });

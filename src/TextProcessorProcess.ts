@@ -95,7 +95,7 @@ export class TextProcessorProcess {
 		}
 	}
 
-	public getTranslatedLines(): Array<string> {
+	public getTranslatedLines(): Array<string | undefined> {
 		if (this.noRepeat) {
 			let recoveredTranslations = new Array(this.expectedResponseOrder.length);
 			for (let i = 0; i < this.expectedResponseOrder.length; i++) {
@@ -113,7 +113,7 @@ export class TextProcessorProcess {
 
 			this.applyTranslatedLines(recoveredTranslations);
 		}
-		let lines: Array<string> = [];
+		let lines: Array<string | undefined> = [];
 		for (let i = 0; i < this.lines.length; i++) {
 			lines.push(this.lines[i].getTranslatedString());
 		}

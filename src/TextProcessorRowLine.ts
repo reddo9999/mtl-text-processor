@@ -33,6 +33,7 @@ export class TextProcessorRowLine {
 	private quoteType: string = '"';
 	private processed: boolean = false;
     private passes : {[id : number] : number} = {};
+    private broken : boolean = false;
 
 	constructor(process: TextProcessorProcess, text: string) {
 		this.process = process;
@@ -357,6 +358,9 @@ export class TextProcessorRowLine {
 		let extractedIndex = 0;
 		let currentExtracted = this.extractedStrings[extractedIndex];
 		for (let i = 0; i < this.translations.length; i++) {
+            if (typeof this.translations[i] != "string") {
+                this.broken = true;
+            }
 			while (typeof currentPart == 'number') {
 				currentPart = this.parts[++innerIndex];
 			}
@@ -442,7 +446,7 @@ export class TextProcessorRowLine {
 		this.processed = true;
 	}
 
-	public getTranslatedString(): string {
+	public getTranslatedString(): string | undefined {
 		if (this.translations.length != this.expecting) {
 			throw new Error(
 				'Did not receive enough translations. Expected ' +
@@ -452,6 +456,10 @@ export class TextProcessorRowLine {
 			);
 		}
 		this.applyTranslations();
+
+        if (this.broken) {
+            return undefined;
+        }
 
 		let finalString = '';
 
@@ -467,7 +475,11 @@ export class TextProcessorRowLine {
 			let placeholder = this.placeholders[i];
 			let content = this.placeholderContent[placeholder];
 			if (typeof content != 'string') {
-				content = content.getTranslatedString();
+				content = <string> content.getTranslatedString();
+                if (typeof content == "undefined") {
+                    this.broken = true;
+                    return undefined;
+                }
 			}
 
 			let idx = finalString.lastIndexOf(placeholder);
