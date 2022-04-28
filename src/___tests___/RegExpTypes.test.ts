@@ -12,9 +12,7 @@ test('Single String RegExp', () => {
 			isolateSymbolsPatterns: [],
 			lineBreakPatterns: [],
 			protectCornersPatterns: [],
-			protectedPatterns: [
-                ["abc"],
-            ],
+			protectedPatterns: [['abc']],
 			placeholderType: type,
 			mergeSequentialPlaceholders: true,
 			protectedPatternsPad: false,
