@@ -1,3 +1,6 @@
+# 0.5.1
+- Exports constants for developing
+
 # 0.5.0
 - Pattern types now allow for arrays of strings (direct matching) and functions (which can return an array of strings, a regexp, or nothing)
 - If invalid/empty translation is added, the processing happens as usual, but affected lines will return "undefined"

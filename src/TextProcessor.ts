@@ -10,6 +10,17 @@ import {
 	TextProcessorOrderType
 } from './_Constants';
 
+export {
+	closerRegExp,
+	defaultIsolateRegexp,
+	defaultPunctuation,
+	defaultSymbols,
+	openerRegExp,
+	PlaceholderType,
+	symbolsSpaces,
+	TextProcessorOrderType
+};
+
 export type TextProcessorPatternFunction = (options: {
 	/**
 	 * The string as it was when processing of the pattern started.
