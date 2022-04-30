@@ -1,4 +1,8 @@
-import { PlaceholderRecoveryType, TextProcessorPattern, TextProcessorPatternFunction } from './TextProcessor';
+import {
+	PlaceholderRecoveryType,
+	TextProcessorPattern,
+	TextProcessorPatternFunction
+} from './TextProcessor';
 import type { TextProcessorProcess } from './TextProcessorProcess';
 import {
 	PlaceholderCreator,
@@ -21,7 +25,7 @@ export class TextProcessorRowLine {
 	private parts: Array<string | number> = [];
 	private symbols: Array<string> = [];
 	private placeholders: Array<string> = [];
-    private placeholdersPositions : Array<number> = [];
+	private placeholdersPositions: Array<number> = [];
 	private placeholderIndexFromMatch: { [match: string]: number } = {};
 	private placeholderContent: {
 		[placeholder: string]: string | TextProcessorRowLine;
@@ -273,55 +277,55 @@ export class TextProcessorRowLine {
 		}
 	}
 
-    public getOriginalIndex (text : string, match : string, position? : number) {
-        let originalIndex : number;
-        if (position == undefined) {
-            position = text.indexOf(match);
-        }
-        if (position == 0) {
-            originalIndex = 0; // start of sentence
-        } else if ((match.length + position) == text.length) {
-            originalIndex = 1; // end of sentence
-        } else {
-            originalIndex = ((match.length/2) + position) / text.length; // "somewhere around the middle"
-        }
-        return originalIndex;
-    }
+	public getOriginalIndex(text: string, match: string, position?: number) {
+		let originalIndex: number;
+		if (position == undefined) {
+			position = text.indexOf(match);
+		}
+		if (position == 0) {
+			originalIndex = 0; // start of sentence
+		} else if (match.length + position == text.length) {
+			originalIndex = 1; // end of sentence
+		} else {
+			originalIndex = (match.length / 2 + position) / text.length; // "somewhere around the middle"
+		}
+		return originalIndex;
+	}
 
-    public getOriginalIndexTransformed (text : string, originalIndex : number) {
-        // given a position bigger than 0 and smaller than 1, find ideal spot to place it into text
-        let spotOn = originalIndex * text.length;
-        let spaces = [];
-        for (let i = 0; i < text.length; i++) {
-            if (text.charAt(i) == " ") {
-                spaces.push(i);
-            }
-        }
+	public getOriginalIndexTransformed(text: string, originalIndex: number) {
+		// given a position bigger than 0 and smaller than 1, find ideal spot to place it into text
+		let spotOn = originalIndex * text.length;
+		let spaces = [];
+		for (let i = 0; i < text.length; i++) {
+			if (text.charAt(i) == ' ') {
+				spaces.push(i);
+			}
+		}
 
-        if (spaces.length == 0) {
-            // we are using a language without spaces. Just throw it in there who cares.
-            return Math.floor(spotOn);
-        } else {
-            let bestDistance = spotOn;
-            let bestIndex = 0;
-            for (let i = 0; i < spaces.length; i++) {
-                let distance = Math.abs(spaces[i] - spotOn);
-                if (distance < bestDistance) {
-                    bestIndex = spaces[i];
-                    bestDistance = distance;
-                }
-            }
-            return bestIndex;
-        }
-    }
+		if (spaces.length == 0) {
+			// we are using a language without spaces. Just throw it in there who cares.
+			return Math.floor(spotOn);
+		} else {
+			let bestDistance = spotOn;
+			let bestIndex = 0;
+			for (let i = 0; i < spaces.length; i++) {
+				let distance = Math.abs(spaces[i] - spotOn);
+				if (distance < bestDistance) {
+					bestIndex = spaces[i];
+					bestDistance = distance;
+				}
+			}
+			return bestIndex;
+		}
+	}
 
 	public replaceAll(
 		translatable: boolean,
 		patterns: Array<TextProcessorPattern>,
-		replacer: (match: string, originalIndex : number) => string,
+		replacer: (match: string, originalIndex: number) => string,
 		pass: number
 	) {
-        // TODO: Find a way to handle inner strings without breaking apart.
+		// TODO: Find a way to handle inner strings without breaking apart.
 		for (let patternIndex = 0; patternIndex < patterns.length; patternIndex++) {
 			for (let textIndex = this.parts.length - 1; textIndex >= 0; textIndex--) {
 				if (typeof this.parts[textIndex] != 'string') {
@@ -345,7 +349,11 @@ export class TextProcessorRowLine {
 							this.parts[textIndex] = this.storeSymbol(text); // will only have one match, so no need to break
 						}
 					} else {
-                        let originalIndex : number = this.getOriginalIndex(text, match[0], match.index);
+						let originalIndex: number = this.getOriginalIndex(
+							text,
+							match[0],
+							match.index
+						);
 						text =
 							text.substring(0, match.index) +
 							replacer(match[0], originalIndex) +
@@ -360,19 +368,19 @@ export class TextProcessorRowLine {
 		}
 	}
 
-    /**
-     * Stores a string and returns a placeholder.
-     * @param match The matching text.
-     * @param originalIndex From 0 to 1, the position of the placeholder in the original string.
-     * @returns 
-     */
-	public createPlaceholder(match: string, originalIndex : number) {
+	/**
+	 * Stores a string and returns a placeholder.
+	 * @param match The matching text.
+	 * @param originalIndex From 0 to 1, the position of the placeholder in the original string.
+	 * @returns
+	 */
+	public createPlaceholder(match: string, originalIndex: number) {
 		// Is this a symbol we already have?
 		let existingIndex = this.placeholderIndexFromMatch[match];
 		if (typeof existingIndex != 'undefined') {
 			let placeholder = this.placeholders[existingIndex];
 			this.placeholders.push(placeholder);
-            this.placeholdersPositions.push(originalIndex);
+			this.placeholdersPositions.push(originalIndex);
 			return placeholder;
 		}
 
@@ -399,7 +407,7 @@ export class TextProcessorRowLine {
 		}
 
 		this.placeholderIndexFromMatch[match] = this.placeholders.push(placeholder) - 1;
-        this.placeholdersPositions.push(originalIndex);
+		this.placeholdersPositions.push(originalIndex);
 		this.placeholderContent[placeholder] = match;
 
 		return placeholder;
@@ -562,7 +570,7 @@ export class TextProcessorRowLine {
 		}
 
 		for (let i = this.placeholders.length - 1; i >= 0; i--) {
-            let originalIndex = this.placeholdersPositions[i];
+			let originalIndex = this.placeholdersPositions[i];
 			let placeholder = this.placeholders[i];
 			let content = this.placeholderContent[placeholder];
 			if (typeof content != 'string') {
@@ -583,33 +591,36 @@ export class TextProcessorRowLine {
 			}
 
 			if (idx == -1) {
-                let recoveryType = this.process.getProcessor().getRecoveryType();
-                let message = "Left it out."
-                switch (recoveryType) {
-                    case PlaceholderRecoveryType.ADD_AT_END:
-                        message = "Added it at the end.",
-                        finalString += " " + content;
-                    break;
-                    case PlaceholderRecoveryType.ADD_AT_START:
-                        message = "Added it at the start.",
-                        finalString = content + " " + finalString;
-                    break;
-                    case PlaceholderRecoveryType.GUESS:
-                        if (originalIndex == 0) {
-                            message = "Added it at the start because it was there initially.",
-                            finalString = content + " " + finalString;
-                        } else if (originalIndex == 1) {
-                            message = "Added it at the end because it was there initially.",
-                            finalString += " " + content;
-                        } else {
-                            let idealIndex = this.getOriginalIndexTransformed(finalString, originalIndex);
-                            message = `Added it at position ${idealIndex} because it was the closest to the original.`;
-                            finalString = finalString.substring(0, idealIndex) +
-                                ` ${content} ` +
-                                finalString.substring(idealIndex + 1);
-                        }
-                    break;
-                }
+				let recoveryType = this.process.getProcessor().getRecoveryType();
+				let message = 'Left it out.';
+				switch (recoveryType) {
+					case PlaceholderRecoveryType.ADD_AT_END:
+						(message = 'Added it at the end.'), (finalString += ' ' + content);
+						break;
+					case PlaceholderRecoveryType.ADD_AT_START:
+						(message = 'Added it at the start.'),
+							(finalString = content + ' ' + finalString);
+						break;
+					case PlaceholderRecoveryType.GUESS:
+						if (originalIndex == 0) {
+							(message = 'Added it at the start because it was there initially.'),
+								(finalString = content + ' ' + finalString);
+						} else if (originalIndex == 1) {
+							(message = 'Added it at the end because it was there initially.'),
+								(finalString += ' ' + content);
+						} else {
+							let idealIndex = this.getOriginalIndexTransformed(
+								finalString,
+								originalIndex
+							);
+							message = `Added it at position ${idealIndex} because it was the closest to the original.`;
+							finalString =
+								finalString.substring(0, idealIndex) +
+								` ${content} ` +
+								finalString.substring(idealIndex + 1);
+						}
+						break;
+				}
 				this.process.addWarning({
 					message: `[TextProcessorRowLine] Had trouble recovering placeholder: ${placeholder}. ${message}`,
 					originalSentence: this.originalString,

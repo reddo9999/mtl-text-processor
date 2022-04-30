@@ -47,10 +47,10 @@ export type TextProcessorPattern =
 	| void;
 
 export enum PlaceholderRecoveryType {
-    ADD_AT_END,
-    ADD_AT_START,
-    GUESS,
-    PERFECT_ONLY,
+	ADD_AT_END,
+	ADD_AT_START,
+	GUESS,
+	PERFECT_ONLY
 }
 
 /**
@@ -163,7 +163,7 @@ type TextProcessorOptions = {
 	 */
 	aggressiveSplittingPatterns: Array<TextProcessorPattern>;
 
-    placeholderRecoveryType : PlaceholderRecoveryType;
+	placeholderRecoveryType: PlaceholderRecoveryType;
 };
 
 /**
@@ -178,7 +178,7 @@ type TextProcessorOptions = {
  */
 export class TextProcessor {
 	protected static DEFAULT_OPTIONS: TextProcessorOptions = {
-        placeholderRecoveryType : PlaceholderRecoveryType.GUESS,
+		placeholderRecoveryType: PlaceholderRecoveryType.GUESS,
 		placeholderType: PlaceholderType.mvStyleLetter,
 		processingOrder: [
 			TextProcessorOrderType.BREAK_LINES,
@@ -312,9 +312,9 @@ export class TextProcessor {
 		return this.options.noRepeat;
 	}
 
-    public getRecoveryType () {
-        return this.options.placeholderRecoveryType;
-    }
+	public getRecoveryType() {
+		return this.options.placeholderRecoveryType;
+	}
 
 	/**
 	 * This initiates a translation process.

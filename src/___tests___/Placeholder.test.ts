@@ -40,7 +40,7 @@ test('Placeholder and escaping validity test', () => {
 test('Warning on fail to readd', () => {
 	Object.values(PlaceholderType).forEach((type) => {
 		let processor = new TextProcessor({
-            placeholderRecoveryType : PlaceholderRecoveryType.PERFECT_ONLY,
+			placeholderRecoveryType: PlaceholderRecoveryType.PERFECT_ONLY,
 			aggressiveSplittingPatterns: [],
 			isolateSymbolsPatterns: [],
 			lineBreakPatterns: [],

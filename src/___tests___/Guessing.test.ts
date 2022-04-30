@@ -8,7 +8,7 @@ import {
 test('Guess position - Start and End', () => {
 	Object.values(PlaceholderType).forEach((type) => {
 		let processor = new TextProcessor({
-            placeholderRecoveryType : PlaceholderRecoveryType.GUESS,
+			placeholderRecoveryType: PlaceholderRecoveryType.GUESS,
 			aggressiveSplittingPatterns: [],
 			isolateSymbolsPatterns: [],
 			lineBreakPatterns: [],
@@ -35,7 +35,9 @@ test('Guess position - Start and End', () => {
 		let matches = [...toTranslate[0].matchAll(placeholderRegExp)];
 		expect(matches.length).toBe(2);
 
-		toTranslate[0] = toTranslate[0].substring(matches[0].index! + matches[0][0].length).trim();
+		toTranslate[0] = toTranslate[0]
+			.substring(matches[0].index! + matches[0][0].length)
+			.trim();
 
 		process.setTranslatedLines(...toTranslate);
 
@@ -49,11 +51,10 @@ test('Guess position - Start and End', () => {
 	});
 });
 
-
 test('Guess position - Middle', () => {
 	Object.values(PlaceholderType).forEach((type) => {
 		let processor = new TextProcessor({
-            placeholderRecoveryType : PlaceholderRecoveryType.GUESS,
+			placeholderRecoveryType: PlaceholderRecoveryType.GUESS,
 			aggressiveSplittingPatterns: [],
 			isolateSymbolsPatterns: [],
 			lineBreakPatterns: [],
@@ -65,7 +66,7 @@ test('Guess position - Middle', () => {
 			processingOrder: [TextProcessorOrderType.ESCAPE_SYMBOLS]
 		});
 
-        let originalSentence = "The frog jumped over Esmeralda, who is a princess.";
+		let originalSentence = 'The frog jumped over Esmeralda, who is a princess.';
 
 		let process = processor.process(originalSentence);
 
@@ -73,7 +74,7 @@ test('Guess position - Middle', () => {
 
 		expect(toTranslate.length).toBe(1);
 
-		process.setTranslatedLines("The frog jumped over % a, who is a princess.");
+		process.setTranslatedLines('The frog jumped over % a, who is a princess.');
 
 		let result = process.getTranslatedLines();
 
@@ -81,14 +82,14 @@ test('Guess position - Middle', () => {
 		expect(process.hasWarnings()).toBe(true);
 		expect(process.getWarnings().length).toBe(1);
 
-		expect(result[0]).toBe("The frog jumped over % Esmeralda a, who is a princess.");
+		expect(result[0]).toBe('The frog jumped over % Esmeralda a, who is a princess.');
 	});
 });
 
 test('Guess position - Middle, but add at start', () => {
 	Object.values(PlaceholderType).forEach((type) => {
 		let processor = new TextProcessor({
-            placeholderRecoveryType : PlaceholderRecoveryType.ADD_AT_START,
+			placeholderRecoveryType: PlaceholderRecoveryType.ADD_AT_START,
 			aggressiveSplittingPatterns: [],
 			isolateSymbolsPatterns: [],
 			lineBreakPatterns: [],
@@ -100,7 +101,7 @@ test('Guess position - Middle, but add at start', () => {
 			processingOrder: [TextProcessorOrderType.ESCAPE_SYMBOLS]
 		});
 
-        let originalSentence = "The frog jumped over Esmeralda, who is a princess.";
+		let originalSentence = 'The frog jumped over Esmeralda, who is a princess.';
 
 		let process = processor.process(originalSentence);
 
@@ -108,7 +109,7 @@ test('Guess position - Middle, but add at start', () => {
 
 		expect(toTranslate.length).toBe(1);
 
-		process.setTranslatedLines("The frog jumped over % a, who is a princess.");
+		process.setTranslatedLines('The frog jumped over % a, who is a princess.');
 
 		let result = process.getTranslatedLines();
 
@@ -116,16 +117,14 @@ test('Guess position - Middle, but add at start', () => {
 		expect(process.hasWarnings()).toBe(true);
 		expect(process.getWarnings().length).toBe(1);
 
-		expect(result[0]).toBe("Esmeralda The frog jumped over % a, who is a princess.");
+		expect(result[0]).toBe('Esmeralda The frog jumped over % a, who is a princess.');
 	});
 });
-
-
 
 test('Guess position - Middle, but add at end', () => {
 	Object.values(PlaceholderType).forEach((type) => {
 		let processor = new TextProcessor({
-            placeholderRecoveryType : PlaceholderRecoveryType.ADD_AT_END,
+			placeholderRecoveryType: PlaceholderRecoveryType.ADD_AT_END,
 			aggressiveSplittingPatterns: [],
 			isolateSymbolsPatterns: [],
 			lineBreakPatterns: [],
@@ -137,7 +136,7 @@ test('Guess position - Middle, but add at end', () => {
 			processingOrder: [TextProcessorOrderType.ESCAPE_SYMBOLS]
 		});
 
-        let originalSentence = "The frog jumped over Esmeralda, who is a princess.";
+		let originalSentence = 'The frog jumped over Esmeralda, who is a princess.';
 
 		let process = processor.process(originalSentence);
 
@@ -145,7 +144,7 @@ test('Guess position - Middle, but add at end', () => {
 
 		expect(toTranslate.length).toBe(1);
 
-		process.setTranslatedLines("The frog jumped over % a, who is a princess.");
+		process.setTranslatedLines('The frog jumped over % a, who is a princess.');
 
 		let result = process.getTranslatedLines();
 
@@ -153,6 +152,6 @@ test('Guess position - Middle, but add at end', () => {
 		expect(process.hasWarnings()).toBe(true);
 		expect(process.getWarnings().length).toBe(1);
 
-		expect(result[0]).toBe("The frog jumped over % a, who is a princess. Esmeralda");
+		expect(result[0]).toBe('The frog jumped over % a, who is a princess. Esmeralda');
 	});
 });
