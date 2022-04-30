@@ -1,4 +1,4 @@
-import { TextProcessor } from '../TextProcessor';
+import { PlaceholderRecoveryType, TextProcessor } from '../TextProcessor';
 import {
 	PlaceholderType,
 	PlaceholderTypeRegExp,
@@ -40,6 +40,7 @@ test('Placeholder and escaping validity test', () => {
 test('Warning on fail to readd', () => {
 	Object.values(PlaceholderType).forEach((type) => {
 		let processor = new TextProcessor({
+            placeholderRecoveryType : PlaceholderRecoveryType.PERFECT_ONLY,
 			aggressiveSplittingPatterns: [],
 			isolateSymbolsPatterns: [],
 			lineBreakPatterns: [],
