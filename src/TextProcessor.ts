@@ -46,6 +46,13 @@ export type TextProcessorPattern =
 	| TextProcessorPatternFunction
 	| void;
 
+export enum PlaceholderRecoveryType {
+    ADD_AT_END,
+    ADD_AT_START,
+    GUESS,
+    PERFECT_ONLY,
+}
+
 /**
  * Options type for the Processor
  * While initiating the Processor, all options are optional.
@@ -155,6 +162,8 @@ type TextProcessorOptions = {
 	 * By default, the matched symbols will not be translatable nor sent to the translator.
 	 */
 	aggressiveSplittingPatterns: Array<TextProcessorPattern>;
+
+    placeholderRecoveryType : PlaceholderRecoveryType;
 };
 
 /**
@@ -169,6 +178,7 @@ type TextProcessorOptions = {
  */
 export class TextProcessor {
 	protected static DEFAULT_OPTIONS: TextProcessorOptions = {
+        placeholderRecoveryType : PlaceholderRecoveryType.GUESS,
 		placeholderType: PlaceholderType.mvStyleLetter,
 		processingOrder: [
 			TextProcessorOrderType.BREAK_LINES,
@@ -301,6 +311,10 @@ export class TextProcessor {
 	public isNoRepeat() {
 		return this.options.noRepeat;
 	}
+
+    public getRecoveryType () {
+        return this.options.placeholderRecoveryType;
+    }
 
 	/**
 	 * This initiates a translation process.
