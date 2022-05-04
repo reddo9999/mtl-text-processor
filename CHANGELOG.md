@@ -1,3 +1,10 @@
+# 0.7.0
+- Improved detection of padding around placeholders when merging sequential placeholders.
+- The implementation used for isolated sequences and protected patterns now allow for nested patterns.
+    - While this is not truly recursive, it will keep running so long as it is finding something.
+- Line breaks now create brand new sentences internally.
+    - This will reduce placeholder count. So instead of long inputs with multiple lines going all the way from {A} to {Z}, each line will start at {A}. From observation, most translators are better able to handle {A} to {C}, probably because those were included in their training data in some way, so this is helpful.
+
 # 0.6.0
 - Added new option for Recovering placeholders.
     - This allows us to recover placeholders even when the translator eats them. There are four styles:

@@ -20,7 +20,7 @@ test('Guess position - Start and End', () => {
 			processingOrder: [TextProcessorOrderType.ESCAPE_SYMBOLS]
 		});
 
-        // ABC will match against hashtag placeholder #ABC...
+		// ABC will match against hashtag placeholder #ABC...
 		let start = 'wabba';
 		let middle = ' Is my string complete? ';
 		let end = 'lublub';

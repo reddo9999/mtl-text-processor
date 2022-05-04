@@ -7,10 +7,7 @@ test('Mixed test', () => {
 		isolateSymbolsPatterns: [/\[b\].+?\[\/b\]/g, /("[^"]+?")/g, /\([^()]+?\)/g],
 		lineBreakPatterns: [/(?<=[!.?\]"])\r?\n/g],
 		lineBreakReplacement: '\n',
-		protectCornersPatterns: [
-            /(^\[b\])|(\[\/b\]$)/g, 
-            /(^[\[\()])|([\]\)]$)/g
-        ],
+		protectCornersPatterns: [/(^\[b\])|(\[\/b\]$)/g, /(^[\[\()])|([\]\)]$)/g],
 		protectedPatterns: [/\\v\[\d+\]/g],
 		placeholderType: PlaceholderType.curlie,
 		mergeSequentialPlaceholders: true,
@@ -51,13 +48,13 @@ test('Mixed test', () => {
 		'Laoch',
 		'Féar',
 		'Duilleog',
-		'Ná teip orm!',
+		'Ná teip orm!'
 	);
 
 	let translation = process.getTranslatedLines();
 	expect(translation.length).toBe(1);
 
-    // TODO: One of the latest changes added a few extra spaces. I wonder how we could fix this. Maybe replace \s{2} with a single one?
+	// TODO: One of the latest changes added a few extra spaces. I wonder how we could fix this. Maybe replace \s{2} with a single one?
 	let intendedResult =
 		`[Rí]\n` +
 		`Dia duit "Laoch". Ba mhaith liom go dtabharfá (Féar|Duilleog) chugam, ach tá sé ceart go leor.\n` +

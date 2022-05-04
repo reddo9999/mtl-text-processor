@@ -62,7 +62,7 @@ test('Nested Isolated string test', () => {
 
 	let toTranslate = process.getTranslatableLines();
 
-    /**
+	/**
      * [
         'This is the entire {E},{F}, sometimes.',
         '(A Symbol for what is to come)',
@@ -74,7 +74,7 @@ test('Nested Isolated string test', () => {
      */
 	expect(toTranslate.length).toBe(6);
 
-    // This will likely change positions on a update
+	// This will likely change positions on a update
 	expect(toTranslate[1]).toBe(`(${isolated})`);
 
 	let newIsolated = 'A tarnished symbol of future lost';
@@ -95,13 +95,13 @@ test('Nested Isolated string test with corner cutting', () => {
 	let processor = new TextProcessor({
 		aggressiveSplittingPatterns: [],
 		isolateSymbolsPatterns: [/\([^\(\)]+?\)/g],
-		protectCornersPatterns: [
-            /^[\(\)]+/g,
-            /[\)\(]+$/g,
-        ],
+		protectCornersPatterns: [/^[\(\)]+/g, /[\)\(]+$/g],
 		protectedPatterns: [],
 		lineBreakPatterns: [],
-		processingOrder: [TextProcessorOrderType.ISOLATE_SENTENCES, TextProcessorOrderType.CUT_CORNERS],
+		processingOrder: [
+			TextProcessorOrderType.ISOLATE_SENTENCES,
+			TextProcessorOrderType.CUT_CORNERS
+		],
 		placeholderType: PlaceholderType.curlieLetter // Can't isolate without placeholders
 	});
 
@@ -115,7 +115,7 @@ test('Nested Isolated string test with corner cutting', () => {
 
 	let toTranslate = process.getTranslatableLines();
 
-    /**
+	/**
      *
       [
         'This is the entire {E},{F}, sometimes.',
@@ -128,8 +128,7 @@ test('Nested Isolated string test with corner cutting', () => {
      */
 	expect(toTranslate.length).toBe(5);
 
-
-    // This will likely change positions on a update
+	// This will likely change positions on a update
 	expect(toTranslate[1]).toBe(`${isolated}`);
 
 	let newIsolated = 'A tarnished symbol of future lost';

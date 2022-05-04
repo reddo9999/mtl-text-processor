@@ -19,7 +19,7 @@ test('Single String RegExp', () => {
 			processingOrder: [TextProcessorOrderType.ESCAPE_SYMBOLS]
 		});
 
-        // ABC ends up eating part of the hashtag placeholder... #ABC...
+		// ABC ends up eating part of the hashtag placeholder... #ABC...
 		let originalSentences = ['!  wabba  !', '!wabba|wabba!', 'wabba', 'wabba'];
 
 		let process = processor.process(...originalSentences);
