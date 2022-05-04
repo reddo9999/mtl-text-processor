@@ -582,7 +582,12 @@ export class TextProcessorRowLine {
                 if (typeof symbol == "string") {
 				    finalString += symbol;
                 } else {
-                    finalString += (<TextProcessorRowLine> symbol).getTranslatedString();
+                    let content = (<TextProcessorRowLine> symbol).getTranslatedString();
+                    if (content === undefined) {
+                        this.broken = true;
+                        return undefined;
+                    }
+                    finalString += content;
                 }
 			} else {
 				finalString += this.parts[i];
