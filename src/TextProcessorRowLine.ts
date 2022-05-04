@@ -23,7 +23,7 @@ export class TextProcessorRowLine {
 	private process: TextProcessorProcess;
 	private originalString: string;
 	private parts: Array<string | number> = [];
-	private symbols: Array<string> = [];
+	private symbols: Array<string | TextProcessorRowLine> = [];
 	private placeholders: Array<string> = [];
 	private placeholdersPositions: Array<number> = [];
 	private placeholderIndexFromMatch: { [match: string]: number } = {};
@@ -52,7 +52,7 @@ export class TextProcessorRowLine {
 		return this.process.getProcessor().getProcessingOrder();
 	}
 
-	protected storeSymbol(text: string) {
+	protected storeSymbol(text: string | TextProcessorRowLine) {
 		return this.symbols.push(text) - 1;
 	}
 
@@ -97,13 +97,25 @@ export class TextProcessorRowLine {
 
 	protected breakLines() {
 		let patterns = this.getLineBreakPatterns();
+		let splitsOn: Array<number> = [];
 		this.matchAll(
 			patterns,
 			(matching, match) => {
-				return [this.storeSymbol(this.getLineBreakReplacement())];
+				let idx = this.storeSymbol(this.getLineBreakReplacement());
+				splitsOn.push(idx);
+				return [idx];
 			},
 			this.passes[TextProcessorOrderType.BREAK_LINES]++
 		);
+        // By isolating them into separate TextProcessorRowLine we can reduce placeholder count, which results in better translations.
+        splitsOn.forEach(index => {
+            [-1, 1].forEach(direction => {
+                if (typeof this.parts[index + direction] == "string") {
+                    this.parts[index + direction] = this.storeSymbol(new TextProcessorRowLine(this.process, <string> this.parts[index + direction]));
+                    this.extractedStrings.push(<TextProcessorRowLine> this.symbols[<number> this.parts[index + direction]]);
+                }
+            })
+        });
 	}
 
 	protected splitSentences() {
@@ -167,8 +179,7 @@ export class TextProcessorRowLine {
 					this.getPlaceholderType
 			);
 		} else {
-			let padding = '[' + symbolsSpaces + ']*';
-			let regexPattern = new RegExp(`(${padding + pattern + padding}){2,}`, 'g');
+			let regexPattern = new RegExp(`(\s*${pattern}\s*){2,}`, 'g');
 			this.replaceAll(
 				false,
 				[regexPattern],
@@ -567,7 +578,12 @@ export class TextProcessorRowLine {
 
 		for (let i = 0; i < this.parts.length; i++) {
 			if (typeof this.parts[i] == 'number') {
-				finalString += this.symbols[<number>this.parts[i]];
+                let symbol = this.symbols[<number>this.parts[i]];
+                if (typeof symbol == "string") {
+				    finalString += symbol;
+                } else {
+                    finalString += (<TextProcessorRowLine> symbol).getTranslatedString();
+                }
 			} else {
 				finalString += this.parts[i];
 			}
