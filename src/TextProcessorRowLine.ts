@@ -325,47 +325,51 @@ export class TextProcessorRowLine {
 		replacer: (match: string, originalIndex: number) => string,
 		pass: number
 	) {
-		// TODO: Find a way to handle inner strings without breaking apart.
-		for (let patternIndex = 0; patternIndex < patterns.length; patternIndex++) {
-			for (let textIndex = this.parts.length - 1; textIndex >= 0; textIndex--) {
-				if (typeof this.parts[textIndex] != 'string') {
-					continue;
-				}
+        let found = true;
+        while (found) {
+            found = false;
+            for (let patternIndex = 0; patternIndex < patterns.length; patternIndex++) {
+                for (let textIndex = this.parts.length - 1; textIndex >= 0; textIndex--) {
+                    if (typeof this.parts[textIndex] != 'string') {
+                        continue;
+                    }
 
-				let text = <string>this.parts[textIndex];
-				let pattern = this.regExpFromPattern(patterns[patternIndex], {
-					fullString: text,
-					pass: pass
-				});
-				if (pattern == undefined) {
-					continue;
-				}
+                    let text = <string>this.parts[textIndex];
+                    let pattern = this.regExpFromPattern(patterns[patternIndex], {
+                        fullString: text,
+                        pass: pass
+                    });
+                    if (pattern == undefined) {
+                        continue;
+                    }
 
-				let matches = [...text.matchAll(pattern)];
-				for (let i = matches.length - 1; i >= 0; i--) {
-					let match = matches[i];
-					if (match.index == 0 && match[0].length == text.length) {
-						if (!translatable) {
-							this.parts[textIndex] = this.storeSymbol(text); // will only have one match, so no need to break
-						}
-					} else {
-						let originalIndex: number = this.getOriginalIndex(
-							text,
-							match[0],
-							match.index
-						);
-						text =
-							text.substring(0, match.index) +
-							replacer(match[0], originalIndex) +
-							text.substring(match.index! + match[0].length);
-					}
-				}
+                    let matches = [...text.matchAll(pattern)];
+                    for (let i = matches.length - 1; i >= 0; i--) {
+                        let match = matches[i];
+                        if (match.index == 0 && match[0].length == text.length) {
+                            if (!translatable) {
+                                this.parts[textIndex] = this.storeSymbol(text); // will only have one match, so no need to break
+                            }
+                        } else {
+                            found = true;
+                            let originalIndex: number = this.getOriginalIndex(
+                                text,
+                                match[0],
+                                match.index
+                            );
+                            text =
+                                text.substring(0, match.index) +
+                                replacer(match[0], originalIndex) +
+                                text.substring(match.index! + match[0].length);
+                        }
+                    }
 
-				if (typeof this.parts[textIndex] == 'string') {
-					this.parts[textIndex] = text;
-				}
-			}
-		}
+                    if (typeof this.parts[textIndex] == 'string') {
+                        this.parts[textIndex] = text;
+                    }
+                }
+            }
+        }
 	}
 
 	/**
