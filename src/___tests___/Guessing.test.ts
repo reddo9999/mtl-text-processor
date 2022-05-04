@@ -13,16 +13,17 @@ test('Guess position - Start and End', () => {
 			isolateSymbolsPatterns: [],
 			lineBreakPatterns: [],
 			protectCornersPatterns: [],
-			protectedPatterns: [/abc/g, /cba/g],
+			protectedPatterns: [/wabba/g, /lublub/g],
 			placeholderType: type,
 			mergeSequentialPlaceholders: true,
 			protectedPatternsPad: false,
 			processingOrder: [TextProcessorOrderType.ESCAPE_SYMBOLS]
 		});
 
-		let start = 'abc';
+        // ABC will match against hashtag placeholder #ABC...
+		let start = 'wabba';
 		let middle = ' Is my string complete? ';
-		let end = 'cba';
+		let end = 'lublub';
 		let originalSentences = [start + middle + end];
 
 		let process = processor.process(...originalSentences);

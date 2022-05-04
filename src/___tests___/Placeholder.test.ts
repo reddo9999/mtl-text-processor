@@ -45,16 +45,16 @@ test('Warning on fail to readd', () => {
 			isolateSymbolsPatterns: [],
 			lineBreakPatterns: [],
 			protectCornersPatterns: [],
-			protectedPatterns: [/abc/g, /cba/g],
+			protectedPatterns: [/wabba/g, /lub/g],
 			placeholderType: type,
 			mergeSequentialPlaceholders: true,
 			protectedPatternsPad: false,
 			processingOrder: [TextProcessorOrderType.ESCAPE_SYMBOLS]
 		});
 
-		let start = 'abc';
+		let start = 'wabba';
 		let middle = ' Is my string complete? ';
-		let end = 'cba';
+		let end = 'lub';
 		let originalSentences = [start + middle + end];
 
 		let process = processor.process(...originalSentences);

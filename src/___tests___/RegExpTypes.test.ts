@@ -12,14 +12,15 @@ test('Single String RegExp', () => {
 			isolateSymbolsPatterns: [],
 			lineBreakPatterns: [],
 			protectCornersPatterns: [],
-			protectedPatterns: [['abc']],
+			protectedPatterns: [['wabba']],
 			placeholderType: type,
 			mergeSequentialPlaceholders: true,
 			protectedPatternsPad: false,
 			processingOrder: [TextProcessorOrderType.ESCAPE_SYMBOLS]
 		});
 
-		let originalSentences = ['!  abc  !', '!abc|abc!', 'abc', 'abcabcabc'];
+        // ABC ends up eating part of the hashtag placeholder... #ABC...
+		let originalSentences = ['!  wabba  !', '!wabba|wabba!', 'wabba', 'wabba'];
 
 		let process = processor.process(...originalSentences);
 
