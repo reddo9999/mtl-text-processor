@@ -179,7 +179,7 @@ export class TextProcessorRowLine {
 					this.getPlaceholderType
 			);
 		} else {
-			let regexPattern = new RegExp(`(\s*${pattern}\s*){2,}`, 'g');
+			let regexPattern = new RegExp(`(\\s*${pattern}\\s*){2,}`, 'g');
 			this.replaceAll(
 				false,
 				[regexPattern],
