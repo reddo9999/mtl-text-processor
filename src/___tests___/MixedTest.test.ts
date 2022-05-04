@@ -57,8 +57,6 @@ test('Mixed test', () => {
 	let translation = process.getTranslatedLines();
 	expect(translation.length).toBe(1);
 
-    console.log(translation[0]);
-
     // TODO: One of the latest changes added a few extra spaces. I wonder how we could fix this. Maybe replace \s{2} with a single one?
 	let intendedResult =
 		`[Rí]\n` +
